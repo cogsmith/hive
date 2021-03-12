@@ -15,40 +15,40 @@ LOG.Fatal = LOG;
 LOG.Null  = function () {};
 
 const fastify = require('fastify')({ 
-    logger:true, maxParamLength:999, ignoreTrailingSlash:false, 
+	logger:true, maxParamLength:999, ignoreTrailingSlash:false, 
  });
 
 const AppJSON = require('./package.json');
 const AppMeta = {
-    Version:AppJSON.version||process.env.npm_package_version||'0.0.0',
-    Name:AppJSON.namelong||AppJSON.name||'App',
-    Info:AppJSON.description||'',
+	Version:AppJSON.version||process.env.npm_package_version||'0.0.0',
+	Name:AppJSON.namelong||AppJSON.name||'App',
+	Info:AppJSON.description||'',
 }; AppMeta.Full = AppMeta.Name + ': ' + AppMeta.Info + ' [' + AppMeta.Version + ']';
 
 const AppArgs = 
-    yargs(process.argv).wrap(125)
-    .usage("\n"+AppMeta.Full+"\n\n"+'USAGE: node $0 [options]')
-    .epilog('DT: '+new Date().toISOString()+"\n\n"+process.argv.join(' ')+"\n")
-    .demandOption(['ip','port']) // ,'hivepath','hive'])
-    .describe('v','Logging Level').default('v',0).alias('v','verbose').count('verbose')                
-    .describe('ip','Bind IP').default('ip','127.0.0.1')
-    .describe('port','Bind Port').default('port',99)
-    .describe('hivepath','Hive Path').default('hivepath','/hive')
-    .describe('hive','Hive ID Name').default('hive',undefined)
+	yargs(process.argv).wrap(125)
+	.usage("\n"+AppMeta.Full+"\n\n"+'USAGE: node $0 [options]')
+	.epilog('DT: '+new Date().toISOString()+"\n\n"+process.argv.join(' ')+"\n")
+	.demandOption(['ip','port']) // ,'hivepath','hive'])
+	.describe('v','Logging Level').default('v',0).alias('v','verbose').count('verbose')                
+	.describe('ip','Bind IP').default('ip','127.0.0.1')
+	.describe('port','Bind Port').default('port',99)
+	.describe('hivepath','Hive Path').default('hivepath','/hive')
+	.describe('hive','Hive ID Name').default('hive',undefined)
 	.describe('do','Action').default('do','run')
-    .showHelp('log')
+	.showHelp('log')
 .argv; console.log(); // console.log(AppArgs);
 
 const App = { 
-    AppJSON:AppJSON,
-    Args:AppArgs,
-    Meta:AppMeta,
-    Requests:0,
-    Clients:{},
-    Port:AppArgs.port,
-    IP:AppArgs.ip,
-    Hive:AppArgs.hive,
-    HivePath:AppArgs.hivepath,
+	AppJSON:AppJSON,
+	Args:AppArgs,
+	Meta:AppMeta,
+	Requests:0,
+	Clients:{},
+	Port:AppArgs.port,
+	IP:AppArgs.ip,
+	Hive:AppArgs.hive,
+	HivePath:AppArgs.hivepath,
 	Do:AppArgs.do.toUpperCase(),
 	Cell:AppArgs.cell,
 };
@@ -61,28 +61,28 @@ App.PortDB = {};
 App.CellDB = {};
 
 App.RunInit = function () {
-    fastify.log.info('App.RunInit'); 
+	fastify.log.info('App.RunInit'); 
 
 	try { execa.commandSync('docker container stop $(docker container ls -q --filter name=ZX_'+App.Hive+'_*) ; docker container rm $(docker container ls -q --filter name=ZX_'+App.Hive+'_*)',{shell:true}).stdout.pipe(process.stdout); } catch (ex) { };
 
-    fastify.register(require('fastify-compress'));
+	fastify.register(require('fastify-compress'));
 
-    fastify.addHook('onRequest', (req,rep,nxt) => { 
-        let reqip = req.socket.remoteAddress;
-        App.Requests++; if (!App.Clients[reqip]) { App.Clients[reqip]=1; } else { App.Clients[reqip]++; }
-        nxt();
-    });
+	fastify.addHook('onRequest', (req,rep,nxt) => { 
+		let reqip = req.socket.remoteAddress;
+		App.Requests++; if (!App.Clients[reqip]) { App.Clients[reqip]=1; } else { App.Clients[reqip]++; }
+		nxt();
+	});
 
-    fastify.get('/', function (req,rep) { rep.send('ZX'); });
+	fastify.get('/', function (req,rep) { rep.send('ZX'); });
 	
 	fastify.get('/zx/hive/load', function (req,rep) { App.Load(req.query.cell); rep.send({AX:'ZX.Hive.Load',Q:req.query}); });
 	fastify.get('/zx/hive/stop', function (req,rep) { App.Stop(req.query.cell); rep.send({AX:'ZX.Hive.Stop',Q:req.query}); });
 
 	fastify.get('/zx/hive/nuke', function (req,rep) { App.Nuke(); rep.send({AX:'ZX.Hive.Nuke',Q:req.query}); });
 
-    fastify.get('/zx/db/json', function (req,rep) { rep.send({CellDB:App.CellDB,PortDB:App.PortDB}); });
+	fastify.get('/zx/db/json', function (req,rep) { rep.send({CellDB:App.CellDB,PortDB:App.PortDB}); });
 
-    fastify.listen(App.Port, App.IP, (err,address) => { if (err) { throw err; } else { fastify.log.info('App.RunInit:Done'); App.RunMain(); } } );
+	fastify.listen(App.Port, App.IP, (err,address) => { if (err) { throw err; } else { fastify.log.info('App.RunInit:Done'); App.RunMain(); } } );
 }
 
 App.Nuke = function () {
@@ -123,14 +123,14 @@ App.LoadCell = function (cell) {
 	App.PortDB[port] = z;
 	App.CellDB[cell] = z;
 
-    let RUN = [];
+	let RUN = [];
 	let dockid='ZX_'+App.Hive+'_'+z.Port;
 	if (z.Type=='HTML')        { RUN.push("docker stop "+dockid+" ; docker rm "+dockid+" ; docker run --rm --name "+dockid+" -p 127.0.0.1:"+z.Port+":9 -v "+z.Path+":/www cogsmith/wx-static --port 9 --ip 0.0.0.0 --www /www"); }
 	if (z.Type=='APPJS')       { RUN.push("docker stop "+dockid+" ; docker rm "+dockid+" ; docker run --rm --name "+dockid+" -p 127.0.0.1:"+z.Port+":9 -v "+z.Path+":/app node node /app/app.js --port 9 --ip 0.0.0.0"); }
 	if (z.Type=='DOCKER-RUN')  { RUN.push("docker stop "+dockid+" ; docker rm "+dockid+" ; docker run --rm --name "+dockid+" -p 127.0.0.1:"+z.Port+":9 -v "+z.Path+"/data:/app/data "+z.Run+" --port 9 --ip 0.0.0.0"); }
-    console.log(RUN);
+	console.log(RUN);
 
-    RUN.forEach(x=>{ console.log('CMD: '+x); execa.command(x,{shell:true}).stdout.pipe(process.stdout); });	
+	RUN.forEach(x=>{ console.log('CMD: '+x); execa.command(x,{shell:true}).stdout.pipe(process.stdout); });	
 }
 
 App.GetSlugHost = function (slug) {
@@ -194,7 +194,7 @@ App.Init = function () {
 };
 
 App.RunMain = function () {
-    fastify.log.info('App.RunMain');
+	fastify.log.info('App.RunMain');
 	if (App.Cell) { App.CallLoad(App.Cell); }
 };
 
