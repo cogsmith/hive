@@ -1,0 +1,1 @@
+docker exec ZXHIVE_DEMO node app.js --do stop --cell LOCALHOST/web/raw/_
