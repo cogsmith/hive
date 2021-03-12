@@ -2,7 +2,7 @@
 
 ---
 
-## Docker Orchestration Magic
+## :zap: Docker Orchestration Magic :zap:
 ### Container Abstraction Layer: Servers & Workloads
 
 ---
