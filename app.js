@@ -37,7 +37,7 @@ const AppArgs =
 	.describe('hive','Hive ID Name').default('hive',undefined)
 	.describe('do','Action').default('do','run')
 	.describe('cell','Cell ID')
-	.describe('hiveip','Hive Public IP').default('hiveip','127.0.0.1')
+	.describe('hiveip','Hive Public IP').default('hiveip',  '127.0.0.1')
 	.describe('hivebind','Hive Bind IP').default('hivebind','127.0.0.1')
 	.showHelp('log')
 .argv; console.log(); // console.log(AppArgs);
