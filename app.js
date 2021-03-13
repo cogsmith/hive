@@ -87,14 +87,13 @@ App.RunInit = function () {
 
 	fastify.get('/zx/db/json', function (req,rep) { rep.send({CellDB:App.CellDB,PortDB:App.PortDB}); });
 
-	fastify.listen(App.Port, App.IP, (err,address) => { if (err) { throw err; } else { fastify.log.info('App.RunInit:Done'); App.RunMain(); } } );
+	fastify.listen(App.Port, App.IP, (err,address) => { if (err) { LOG.Error(err); throw err; } else { fastify.log.info('App.RunInit:Done'); App.RunMain(); } } );
 }
 
 App.Nuke = function () {
 	execa.commandSync('docker container stop $(docker container ls -q --filter name=ZX*)',{shell:true}).stdout.pipe(process.stdout);
 	execa.commandSync('docker container rm   $(docker container ls -q --filter name=ZX*)',{shell:true}).stdout.pipe(process.stdout);
 }
-
 
 App.Stop = function (cell) {
 	if (App.CellDB[cell]) {
@@ -127,15 +126,16 @@ App.LoadCell = function (cell) {
 
 	App.PortDB[port] = z;
 	App.CellDB[cell] = z;
-
+	
 	let RUN = [];
+
 	let dockid = 'ZX_'+App.Hive+'_'+z.Port;
 	let dockimg = ''; if (z.Type=='DOCKER-RUN') { dockimg = z.Run.split(' ')[0]; }
 	if (z.Type=='HTML')        { RUN.push("docker stop "+dockid+" ; docker rm "+dockid+" ; docker run --rm --name "+dockid+" --env HOST=0.0.0.0 --env PORT=9 -p "+App.HiveBind+":"+z.Port+":9 -v "+z.Path+":/www cogsmith/wx-static --port 9 --ip 0.0.0.0 --www /www"); }
 	if (z.Type=='APPJS')       { RUN.push("docker stop "+dockid+" ; docker rm "+dockid+" ; docker run --rm --name "+dockid+" --env HOST=0.0.0.0 --env PORT=9 -p "+App.HiveBind+":"+z.Port+":9 -v "+z.Path+":/app node node /app/app.js --port 9 --ip 0.0.0.0"); }
 	if (z.Type=='DOCKER-RUN')  { RUN.push("docker stop "+dockid+" ; docker rm "+dockid+" ; docker run --rm --name "+dockid+" --env HOST=0.0.0.0 --env PORT=9 -p "+App.HiveBind+":"+z.Port+":9 -v "+z.Path+"/data:/app/data "+z.Run+" --port 9 --ip 0.0.0.0"); }
-	console.log(RUN);
 
+	console.log(RUN);
 	RUN.forEach(x=>{ console.log('CMD: '+x); execa.command(x,{shell:true}).stdout.pipe(process.stdout); });	
 }
 
@@ -167,6 +167,7 @@ App.LoadAll = function () {
 	let hivepath = '/hive'; // let hivepath = App.HivePath;
 	let slugs = fs.readdirSync(hivepath);
 	for (let i=0;i<slugs.length;i++) { let slug = slugs[i]; let host = App.GetSlugHost(slug); 
+		if (slug=='WWW') { continue; } if (slug=='ZWWW') { continue; }
 		if (slug=='hive.json') { continue; } 
 		if (slug=='hive.yaml') { continue; }
 		if (slug=='ports.json') { continue; }
@@ -176,6 +177,18 @@ App.LoadAll = function () {
 
 App.Load = function (cell) {
 	LOG.Info('App.Load: '+cell);
+
+	LOG.Debug("\n\n\n\n");
+	LOG.Debug([App.HivePath,App.Hive]);
+	LOG.Debug("\n\n\n\n");
+
+	    fs.mkdirSync('/hive/WWW/.well-known',{recursive:true});
+	fs.writeFileSync('/hive/WWW/.well-known/wk.txt','WK');
+
+	let cmd = "docker stop ZXPROXY_"+App.Hive+" ; docker rm ZXPROXY_"+App.Hive+" ; docker run --rm --name ZXPROXY_"+App.Hive+" -p "+App.HiveBind+":80:80 -p "+App.HiveBind+":443:443 -v W:/DEV/HIVE/DEMO:/hive cogsmith/zx-proxy --hivebind "+App.HiveBind+" --static /hive/WWW --toip "+App.HiveBind;
+	console.log(cmd);
+	execa.command(cmd,{shell:true}).stdout.pipe(process.stdout);
+
 	if (cell=='ALL') { return App.LoadAll(); }
 	else if (!cell.split('/')[1]) { return App.LoadSlug(cell); }
 	else { return App.LoadCell(cell); }
