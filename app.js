@@ -37,7 +37,8 @@ const AppArgs =
 	.describe('hive','Hive ID Name').default('hive',undefined)
 	.describe('do','Action').default('do','run')
 	.describe('cell','Cell ID')
-	.describe('hiveip','Hive IP').default('hiveip','127.0.0.1')
+	.describe('hiveip','Hive Public IP').default('hiveip','127.0.0.1')
+	.describe('hivebind','Hive Bind IP').default('hivebind','127.0.0.1')
 	.showHelp('log')
 .argv; console.log(); // console.log(AppArgs);
 
@@ -54,6 +55,7 @@ const App = {
 	Do:AppArgs.do.toUpperCase(),
 	Cell:AppArgs.cell,
 	HiveIP:AppArgs.hiveip,
+	HiveBind:AppArgs.hivebind,
 };
 
 App.PortFirst = 9000;
@@ -128,9 +130,9 @@ App.LoadCell = function (cell) {
 
 	let RUN = [];
 	let dockid='ZX_'+App.Hive+'_'+z.Port;
-	if (z.Type=='HTML')        { RUN.push("docker stop "+dockid+" ; docker rm "+dockid+" ; docker run --rm --name "+dockid+" --env HOST=0.0.0.0 --env PORT=9 -p "+App.HiveIP+":"+z.Port+":9 -v "+z.Path+":/www cogsmith/wx-static --port 9 --ip 0.0.0.0 --www /www"); }
-	if (z.Type=='APPJS')       { RUN.push("docker stop "+dockid+" ; docker rm "+dockid+" ; docker run --rm --name "+dockid+" --env HOST=0.0.0.0 --env PORT=9 -p "+App.HiveIP+":"+z.Port+":9 -v "+z.Path+":/app node node /app/app.js --port 9 --ip 0.0.0.0"); }
-	if (z.Type=='DOCKER-RUN')  { RUN.push("docker stop "+dockid+" ; docker rm "+dockid+" ; docker run --rm --name "+dockid+" --env HOST=0.0.0.0 --env PORT=9 -p "+App.HiveIP+":"+z.Port+":9 -v "+z.Path+"/data:/app/data "+z.Run+" --port 9 --ip 0.0.0.0"); }
+	if (z.Type=='HTML')        { RUN.push("docker stop "+dockid+" ; docker rm "+dockid+" ; docker run --rm --name "+dockid+" --env HOST=0.0.0.0 --env PORT=9 -p "+App.HiveBind+":"+z.Port+":9 -v "+z.Path+":/www cogsmith/wx-static --port 9 --ip 0.0.0.0 --www /www"); }
+	if (z.Type=='APPJS')       { RUN.push("docker stop "+dockid+" ; docker rm "+dockid+" ; docker run --rm --name "+dockid+" --env HOST=0.0.0.0 --env PORT=9 -p "+App.HiveBind+":"+z.Port+":9 -v "+z.Path+":/app node node /app/app.js --port 9 --ip 0.0.0.0"); }
+	if (z.Type=='DOCKER-RUN')  { RUN.push("docker stop "+dockid+" ; docker rm "+dockid+" ; docker run --rm --name "+dockid+" --env HOST=0.0.0.0 --env PORT=9 -p "+App.HiveBind+":"+z.Port+":9 -v "+z.Path+"/data:/app/data "+z.Run+" --port 9 --ip 0.0.0.0"); }
 	console.log(RUN);
 
 	RUN.forEach(x=>{ console.log('CMD: '+x); execa.command(x,{shell:true}).stdout.pipe(process.stdout); });	
