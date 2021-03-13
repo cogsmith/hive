@@ -129,7 +129,8 @@ App.LoadCell = function (cell) {
 	App.CellDB[cell] = z;
 
 	let RUN = [];
-	let dockid='ZX_'+App.Hive+'_'+z.Port;
+	let dockid = 'ZX_'+App.Hive+'_'+z.Port;
+	let dockimg = ''; if (z.Type=='DOCKER-RUN') { dockimg = z.Run.split(' ')[0]; }
 	if (z.Type=='HTML')        { RUN.push("docker stop "+dockid+" ; docker rm "+dockid+" ; docker run --rm --name "+dockid+" --env HOST=0.0.0.0 --env PORT=9 -p "+App.HiveBind+":"+z.Port+":9 -v "+z.Path+":/www cogsmith/wx-static --port 9 --ip 0.0.0.0 --www /www"); }
 	if (z.Type=='APPJS')       { RUN.push("docker stop "+dockid+" ; docker rm "+dockid+" ; docker run --rm --name "+dockid+" --env HOST=0.0.0.0 --env PORT=9 -p "+App.HiveBind+":"+z.Port+":9 -v "+z.Path+":/app node node /app/app.js --port 9 --ip 0.0.0.0"); }
 	if (z.Type=='DOCKER-RUN')  { RUN.push("docker stop "+dockid+" ; docker rm "+dockid+" ; docker run --rm --name "+dockid+" --env HOST=0.0.0.0 --env PORT=9 -p "+App.HiveBind+":"+z.Port+":9 -v "+z.Path+"/data:/app/data "+z.Run+" --port 9 --ip 0.0.0.0"); }
