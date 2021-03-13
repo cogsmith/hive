@@ -185,7 +185,7 @@ App.Load = function (cell) {
 	    fs.mkdirSync('/hive/WWW/.well-known',{recursive:true});
 	fs.writeFileSync('/hive/WWW/.well-known/wk.txt','WK');
 
-	let cmd = "docker stop ZXPROXY_"+App.Hive+" ; docker rm ZXPROXY_"+App.Hive+" ; docker run --rm --name ZXPROXY_"+App.Hive+" -p "+App.HiveBind+":80:80 -p "+App.HiveBind+":443:443 -v W:/DEV/HIVE/DEMO:/hive cogsmith/zx-proxy --hivebind "+App.HiveBind+" --static /hive/WWW --toip "+App.HiveBind;
+	let cmd = "docker stop ZXPROXY_"+App.Hive+" ; docker rm ZXPROXY_"+App.Hive+" ; docker run --rm --name ZXPROXY_"+App.Hive+" -p "+App.HiveBind+":80:80 -p "+App.HiveBind+":443:443 -v "+App.HivePath+"/"+App.Hive+":/hive cogsmith/zx-proxy --hivebind "+App.HiveBind+" --static /hive/WWW --toip "+App.HiveBind;
 	console.log(cmd);
 	execa.command(cmd,{shell:true}).stdout.pipe(process.stdout);
 
