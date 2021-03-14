@@ -186,7 +186,7 @@ App.Load = function (cell) {
 	    fs.mkdirSync('/hive/WWW/.well-known/acme-challenge',{recursive:true});
 	fs.writeFileSync('/hive/WWW/.well-known/acme-challenge/acme.txt','ACME');
 
-	let cmd = "docker stop ZXPROXY_"+App.Hive+" ; docker rm ZXPROXY_"+App.Hive+" ; docker run --rm --name ZXPROXY_"+App.Hive+" -p "+App.HiveBind+":80:80 -p "+App.HiveBind+":443:443 -v "+App.HivePath+"/"+App.Hive+":/hive cogsmith/zx-proxy --hivebind "+App.HiveBind+" --static /hive/WWW --toip "+App.HiveBind;
+	let cmd = "docker stop ZXPROXY_"+App.Hive+" ; docker rm ZXPROXY_"+App.Hive+" ; docker run --rm --name ZXPROXY_"+App.Hive+" -p "+App.HiveBind+":80:80 -p "+App.HiveBind+":443:443 -v "+App.HivePath+"/"+App.Hive+":/hive cogsmith/zx-proxy --hiveip "+App.HiveIP+" --hivebind "+App.HiveBind+" --static /hive/WWW --toip "+App.HiveBind;
 	console.log(cmd);
 	execa.command(cmd,{shell:true}).stdout.pipe(process.stdout);
 
