@@ -167,6 +167,7 @@ App.LoadAll = function () {
 	let hivepath = '/hive'; // let hivepath = App.HivePath;
 	let slugs = fs.readdirSync(hivepath);
 	for (let i=0;i<slugs.length;i++) { let slug = slugs[i]; let host = App.GetSlugHost(slug); 
+		if (slug=='ACME') { continue; }
 		if (slug=='WWW') { continue; } if (slug=='ZWWW') { continue; }
 		if (slug=='hive.json') { continue; } 
 		if (slug=='hive.yaml') { continue; }
