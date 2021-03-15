@@ -141,11 +141,8 @@ App.LoadCell = function (cell) {
 	RUN.forEach(x=>{ console.log('CMD: '+x); execa.command(x,{shell:true}).stdout.pipe(process.stdout); });	
 }
 
-App.GetSlugHost = function (slug) {
-	let host = slug.replace(/_/g,'.');
-	let z = slug.split('_'); if (z.length>=2) { host = z.slice(2).reverse().join('.')+'.'+z.slice(0,2).join('.'); }
-	return host;
-}
+App.GetHostSlug = function (host) { let slug = host.replace(/\./g, '_').toUpperCase(); let z = slug.split('_'); if (z.length>=3) { slug = z.slice(-2).join('_')+'_'+z.slice(0,z.length-2).reverse().join('_'); }; return slug; };
+App.GetSlugHost = function (slug) {	let host = slug.replace(/_/g,'.'); let z = slug.split('_'); if (z.length>=2) { host = z.slice(2).reverse().join('.')+'.'+z.slice(0,2).join('.'); }; return host; };
 
 App.LoadSlug = function (slug) {
 	let slugpath = '/hive'+'/'+slug;
