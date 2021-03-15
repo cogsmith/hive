@@ -39,6 +39,7 @@ const AppArgs =
 	.describe('cell','Cell ID')
 	.describe('hiveip','Hive Public IP').default('hiveip',  '127.0.0.1')
 	.describe('hivebind','Hive Bind IP').default('hivebind','127.0.0.1')
+	.describe('adminip', 'Admin IP').default('adminip', '127.0.0.1').array('adminip')
 	.showHelp('log')
 .argv; console.log(); // console.log(AppArgs);
 
@@ -56,6 +57,7 @@ const App = {
 	Cell:AppArgs.cell,
 	HiveIP:AppArgs.hiveip,
 	HiveBind:AppArgs.hivebind,
+	AdminIP: AppArgs.adminip,
 };
 
 App.PortFirst = 9000;
@@ -186,7 +188,8 @@ App.Load = function (cell) {
 	    fs.mkdirSync('/hive/WWW/.well-known/acme-challenge',{recursive:true});
 	fs.writeFileSync('/hive/WWW/.well-known/acme-challenge/acme.txt','ACME');
 
-	let cmd = "docker stop ZXPROXY_"+App.Hive+" ; docker rm ZXPROXY_"+App.Hive+" ; docker run --rm --name ZXPROXY_"+App.Hive+" -p "+App.HiveBind+":80:80 -p "+App.HiveBind+":443:443 -v "+App.HivePath+"/"+App.Hive+":/hive cogsmith/zx-proxy --hiveip "+App.HiveIP+" --hivebind "+App.HiveBind+" --static /hive/WWW --toip "+App.HiveBind;
+	let adminips = ''; for (let i=0;i<App.AdminIP.length;i++) { let ip=App.AdminIP[i]; adminips += '--adminip '+ip+' '; }
+	let cmd = "docker stop ZXPROXY_"+App.Hive+" ; docker rm ZXPROXY_"+App.Hive+" ; docker run --rm --name ZXPROXY_"+App.Hive+" -p "+App.HiveBind+":80:80 -p "+App.HiveBind+":443:443 -v "+App.HivePath+"/"+App.Hive+":/hive cogsmith/zx-proxy "+adminips+" --hiveip "+App.HiveIP+" --hivebind "+App.HiveBind+" --static /hive/WWW --toip "+App.HiveBind;
 	console.log(cmd);
 	execa.command(cmd,{shell:true}).stdout.pipe(process.stdout);
 
