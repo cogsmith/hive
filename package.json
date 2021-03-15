@@ -1,10 +1,29 @@
 {
-  "dependencies": {
-    "axios": "^0.21.1",
-    "execa": "^5.0.0",
-    "fastify": "^3.12.0",
-    "fastify-compress": "^3.4.2",
-    "glob": "^7.1.6",
-    "yargs": "^16.2.0"
-  }
+	"version": "0.0.1",
+	"namelong": "ZX-Hive",
+	"name": "zx-hive",
+	"description": "Docker Orchestration Magic",
+	"keywords": [],
+	"homepage": "https://cogsmith.com/project/0",
+	"license": "http://cogsmith.com/license/public",
+	"repository": "github:cogsmith/zx-hive",
+	"private": true,
+	"author": {
+		"name": "David Adam Coffey",
+		"email": "dac@cogsmith.com",
+		"url": "http://david-adam-coffey.com"
+	},
+	"main": "app.js",
+	"scripts": {
+		"dev": "nodemon app.js",
+		"start": "node app.js"
+	},
+	"dependencies": {
+		"axios": "^0.21.1",
+		"execa": "^5.0.0",
+		"fastify": "^3.12.0",
+		"fastify-compress": "^3.4.2",
+		"glob": "^7.1.6",
+		"yargs": "^16.2.0"
+	}
 }
