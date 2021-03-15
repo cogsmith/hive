@@ -149,12 +149,12 @@ App.LoadSlug = function (slug) {
 	let host = App.GetSlugHost(slug); 
 	LOG.Info('App.LoadSlug: '+slug+' @ '+slugpath);
 
-	let dirsraw = []; try { dirsraw = fs.readdirSync(slugpath+'/web/raw') } catch (ex) { console.error(ex) };
+	let dirsraw = []; try { dirsraw = fs.readdirSync(slugpath+'/web/raw') } catch (ex) {}
 	for (let i=0;i<dirsraw.length;i++) { let x=dirsraw[i];
 		if (glob.sync(slugpath+'/web/raw/'+x+'/'+'*.html').length>0) { App.LoadCell(slug+'/'+'web/raw'+'/'+x); }
 	}
 
-	let dirsapp = []; try { dirsapp = fs.readdirSync(slugpath+'/web/app') } catch (ex) { console.error(ex) };
+	let dirsapp = []; try { dirsapp = fs.readdirSync(slugpath+'/web/app') } catch (ex) {};
 	for (let i=0;i<dirsapp.length;i++) { let x=dirsapp[i];
 		if (fs.existsSync(slugpath+'/web/app/'+x+'/'+'app.js'))     { App.LoadCell(slug+'/'+'web/app'+'/'+x); }
 		if (fs.existsSync(slugpath+'/web/app/'+x+'/'+'docker.run')) { App.LoadCell(slug+'/'+'web/app'+'/'+x); }
