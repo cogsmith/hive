@@ -171,8 +171,9 @@ App.LoadAll = function () {
 		let slug = slugs[i]; let host = App.GetSlugHost(slug);
 		if (slug == 'ACME') { continue; }
 		if (slug == 'WWW') { continue; } if (slug == 'ZWWW') { continue; }
-		if (slug == 'hive.json') { continue; }
-		if (slug == 'hive.yaml') { continue; }
+		if (slug.startsWith('hive.')) { continue; }
+		if (slug.startsWith('proxy.') || slug.startsWith('proxyauto.')) { continue; }
+		if (slug.startsWith('redirect.') || slug.startsWith('redirectauto.')) { continue; }
 		if (slug == 'ports.json') { continue; }
 		App.LoadSlug(slug);
 	}
