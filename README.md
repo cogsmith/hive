@@ -13,7 +13,7 @@
 
 ---
 
-<h1><code><a href='../../blob/main/app.js'>[VIEW APP SOURCE CODE]</a></code></h1>
+<h1><code><a href='app.js'>[VIEW APP SOURCE CODE]</a></code></h1>
 
 ---
 
