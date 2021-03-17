@@ -1,7 +1,8 @@
+FOR /F "tokens=4 delims= " %%i in ('route print ^| find " 0.0.0.0"') do SET MYIP=%%i
 SET HIVE=DEMO
 SET HIVEPATH=W:/DEV/HIVE
 SET CODEPATH=W:/DEV/CODE/zx-hive
-FOR /F "tokens=4 delims= " %%i in ('route print ^| find " 0.0.0.0"') do SET MYIP=%%i
+docker rmi --force cogsmith/helloworld-nodejs ; docker rmi --force cogsmith/nodeinfo ; docker rmi --force cogsmith/wx-static ; docker rmi --force cogsmith/zx-hive ; docker rmi --force cogsmith/zx-proxy
 docker build -t cogsmith/zx-hive %CODEPATH%
 docker stop ZXHIVE_%HIVE%
 docker rm ZXHIVE_%HIVE%
