@@ -189,7 +189,7 @@ App.Load = function (cell) {
 	fs.mkdirSync('/hive/WWW/.well-known/acme-challenge', { recursive: true });
 	fs.writeFileSync('/hive/WWW/.well-known/acme-challenge/acme.txt', 'ACME');
 
-	let adminips = ''; for (let i = 0; i < App.AdminIP.length; i++) { let ip = App.AdminIP[i]; adminips += '--adminip ' + ip + ' '; }
+	let adminips = ''; for (let i = 0; i < App.AdminIP.length; i++) { let ip = App.AdminIP[i]; adminips += '--admin ' + ip + ' '; }
 	let cmd = "docker stop ZXPROXY_" + App.Hive + " ; docker rm ZXPROXY_" + App.Hive + " ; docker run --rm -t --name ZXPROXY_" + App.Hive + " -p " + App.HiveBind + ":80:80 -p " + App.HiveBind + ":443:443 -v " + App.HivePath + "/" + App.Hive + ":/webgate cogsmith/zx-proxy " + adminips + " --public " + App.HiveIP + " --private " + App.HiveBind + " --to " + App.HiveBind + ' --loglevel trace';
 	console.log(cmd);
 	execa.command(cmd, { shell: true }).stdout.pipe(process.stdout);
