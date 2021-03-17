@@ -2,7 +2,7 @@
 
 ---
 
-## :zap: Docker Orchestration Magic :zap:
+## ⚡ Docker Orchestration Magic ⚡
 ### Container Abstraction Layer: Servers & Workloads
 
 ---
@@ -13,7 +13,7 @@
 
 ---
 
-<h1><code><a href='app.js'>[VIEW APP SOURCE CODE]</a></code></h1>
+<h1><code><a href='https://github.com/cogsmith/zx-hive/blob/main/app.js'>[VIEW APP SOURCE CODE]</a></code></h1>
 
 ---
 
