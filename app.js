@@ -150,14 +150,14 @@ App.LoadCell = function (cell) {
 	let kz = Object.keys(App.CellDB);
 	kz.forEach((k) => {
 		let z = App.CellDB[k];
-		k = k.replace('/web/raw/@', '').replace('/web/raw/_', '/_').replace('/web/raw/', '/').replace('/web/app/_', '/_').replace('/web/app/@', '').replace('/web/app/', '/');
+		k = k.replace('/web/raw/@', '').replace('/web/raw/_', '/_').replace('/web/raw/', '/').replace('/web/app/@', '').replace('/web/app/_', '/_').replace('/web/app/', '/');
 		let kk = App.GetSlugHost(k.toLowerCase());
 		if (kk.startsWith('.')) { kk = kk.substr(1) + '_/*'; }
-		map[kk] = 'http://' + App.HiveBind + ':' + z.Port;
-	});
+		map[kk] = (kk == '!' ?: '@': '') + 'http://' + App.HiveBind + ':' + z.Port;
+});
 
-	fs.mkdirSync('/hive/WEBGATE', { recursive: true });
-	fs.writeFileSync('/hive/WEBGATE/HIVE.MAP', yaml.dump(map));
+fs.mkdirSync('/hive/WEBGATE', { recursive: true });
+fs.writeFileSync('/hive/WEBGATE/HIVE.MAP', yaml.dump(map));
 }
 
 App.GetHostSlug = function (host) { let slug = host.replace(/\./g, '_').toUpperCase(); let z = slug.split('_'); if (z.length >= 3) { slug = z.slice(-2).join('_') + '_' + z.slice(0, z.length - 2).reverse().join('_'); }; return slug; };
