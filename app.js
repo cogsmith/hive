@@ -2,6 +2,9 @@ process.onSIGTERM = function () { process.exit(); }; process.on('SIGTERM', funct
 
 const fs = require('fs');
 const path = require('path');
+
+const _ = require('lodash');
+const yaml = require('js-yaml');
 const glob = require('glob');
 const yargs = require('yargs/yargs');
 const execa = require('execa');
@@ -33,8 +36,8 @@ const AppArgs =
 		.epilog('DT: ' + new Date().toISOString() + "\n\n" + process.argv.join(' ') + "\n")
 		.demandOption(['ip', 'port']) // ,'hivepath','hive'])
 		.describe('v', 'Logging Level').default('v', 0).alias('v', 'verbose').count('verbose')
-		.describe('ip', 'Bind IP').default('ip', '127.0.0.1')
-		.describe('port', 'Bind Port').default('port', 99)
+		.describe('ip', 'Bind IP').default('ip', process.env.HOST || '127.0.0.1')
+		.describe('port', 'Bind Port').default('port', process.env.PORT || 99)
 		.describe('hivepath', 'Hive Path').default('hivepath', '/hive')
 		.describe('hive', 'Hive ID Name').default('hive', undefined)
 		.describe('do', 'Action').default('do', 'run')
@@ -142,10 +145,22 @@ App.LoadCell = function (cell) {
 
 	console.log(RUN);
 	RUN.forEach(x => { console.log('CMD: ' + x); execa.command(x, { shell: true }).stdout.pipe(process.stdout); });
+
+	let map = {};
+	let kz = Object.keys(App.CellDB);	
+	kz.forEach((k)=>{
+		let z = App.CellDB[k];
+		k = k.replace('/web/raw/_','/').replace('/web/raw/!','').replace('/web/raw/','/').replace('/web/app/_','/_').replace('/web/app/','/');
+		let kk = App.GetSlugHost(k.toLowerCase());
+		if (kk.startsWith('.')) { kk = kk.substr(1)+'_/*'; }
+		map[kk] = 'http://'+App.HiveIP+':'+z.Port;
+	});
+
+	fs.writeFileSync('/hive/HIVE.MAP',yaml.dump(map));
 }
 
 App.GetHostSlug = function (host) { let slug = host.replace(/\./g, '_').toUpperCase(); let z = slug.split('_'); if (z.length >= 3) { slug = z.slice(-2).join('_') + '_' + z.slice(0, z.length - 2).reverse().join('_'); }; return slug; };
-App.GetSlugHost = function (slug) { let host = slug.replace(/_/g, '.'); let z = slug.split('_'); if (z.length >= 2) { host = z.slice(2).reverse().join('.') + '.' + z.slice(0, 2).join('.'); }; return host; };
+App.GetSlugHost = function (slug) { let host = slug.replace(/_/g, '.'); let z = slug.split('_'); if (z.length >= 2) { host = _.concat(z.slice(2).reverse(),z.slice(0, 2)).join('.'); }; return host; };
 
 App.LoadSlug = function (slug) {
 	let slugpath = '/hive' + '/' + slug;
@@ -196,7 +211,7 @@ App.Load = function (cell) {
 	fs.writeFileSync('/hive/WWW/.well-known/acme-challenge/acme.txt', 'ACME');
 
 	let adminips = ''; for (let i = 0; i < App.AdminIP.length; i++) { let ip = App.AdminIP[i]; if (ip) { adminips += '--admin ' + ip + ' ' }; }
-	let cmd = "docker stop ZXPROXY_" + App.Hive + " ; docker rm ZXPROXY_" + App.Hive + " ; docker run --rm -t --name ZXPROXY_" + App.Hive + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " -p " + App.HiveBind + ":80:80 -p " + App.HiveBind + ":443:443 -v " + App.HivePath + "/" + App.Hive + ":/webgate cogsmith/hive-proxy " + adminips + " --public " + App.HiveIP + " --private " + App.HiveBind + " --to " + App.HiveBind + ' --loglevel trace';
+	let cmd = "docker stop ZXPROXY_" + App.Hive + " ; docker rm ZXPROXY_" + App.Hive + " ; docker run --rm -t --name ZXPROXY_" + App.Hive + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " -p " + App.HiveBind + ":80:80 -p " + App.HiveBind + ":443:443 -v " + App.HivePath + "/" + App.Hive + ":/webgate cogsmith/hive-proxy " + adminips + " --public " + App.HiveIP + " --private " + App.HiveBind + " --to " + App.HiveBind + ' --mapfile GATE.MAP --mapfile HIVE.MAP --loglevel trace';
 	console.log(cmd);
 	execa.command(cmd, { shell: true }).stdout.pipe(process.stdout);
 

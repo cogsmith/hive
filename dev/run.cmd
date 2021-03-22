@@ -7,4 +7,4 @@ docker rmi --force cogsmith/helloworld-nodejs cogsmith/nodeinfo cogsmith/wx-stat
 docker build -t cogsmith/zx-hive %CODEPATH%
 docker stop ZXHIVE_%HIVE%
 docker rm ZXHIVE_%HIVE%
-docker run -v /var/run/docker.sock:/var/run/docker.sock -v %HIVEPATH%/%HIVE%:/hive --name ZXHIVE_%HIVE% cogsmith/zx-hive --hive %HIVE% --hivepath %HIVEPATH% --cell ALL --hivebind %MYIP% --hiveip %MYIP%
+docker run -v /var/run/docker.sock:/var/run/docker.sock -v %HIVEPATH%/%HIVE%:/hive --name ZXHIVE_%HIVE% --env HOST=0.0.0.0 --env PORT=99 -p %MYIP%:99:99 cogsmith/zx-hive --hive %HIVE% --hivepath %HIVEPATH% --cell ALL --hivebind %MYIP% --hiveip %MYIP%
