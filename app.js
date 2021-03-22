@@ -153,7 +153,7 @@ App.LoadCell = function (cell) {
 		k = k.replace('/web/raw/@', '').replace('/web/raw/_', '/_').replace('/web/raw/', '/').replace('/web/app/@', '').replace('/web/app/_', '/_').replace('/web/app/', '/');
 		let kk = App.GetSlugHost(k.toLowerCase());
 		if (kk.startsWith('.')) { kk = kk.substr(1) + '_/*'; }
-		map[kk] = ((kk == '!') ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
+		map[kk] = ((k == '!') ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
 	});
 
 	fs.mkdirSync('/hive/WEBGATE', { recursive: true });
