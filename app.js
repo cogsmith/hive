@@ -120,7 +120,6 @@ App.LoadCell = function (cell) {
 
 	let cz = cell.split('/');
 
-	let port = 0; if (App.CellDB[cell]) { port = App.CellDB[cell].Port; } else { port = App.PortGet(); }
 	let slug = cz[0];
 	let host = App.GetSlugHost(slug); let slughost = host;
 	let type = 'HTML';
@@ -130,6 +129,7 @@ App.LoadCell = function (cell) {
 	if (fs.existsSync('/hive' + '/' + cell + '/' + 'app.js')) { type = 'APPJS'; }
 	if (fs.existsSync('/hive' + '/' + cell + '/' + 'docker.run')) { type = 'DOCKER-RUN'; }
 
+	let port = 0; if (App.CellDB[cell]) { port = App.CellDB[cell].Port; } else if (type == 'HTML') { port = 88; } else { port = App.PortGet(); }
 	let z = { Port: port, Slug: slug, Host: host, Type: type, Base: base, Path: path, Cell: cell };
 
 	if (z.Type == 'DOCKER-RUN') { z.Run = fs.readFileSync('/hive' + '/' + cell + '/' + 'docker.run') + ''; }
@@ -138,11 +138,11 @@ App.LoadCell = function (cell) {
 	App.CellDB[cell] = z;
 
 	let RUN = [];
-	let runrun = '';
+	let runrun = false;
 
 	let dockid = 'ZX_' + App.Hive + '_' + z.Port;
 	let dockimg = ''; if (z.Type == 'DOCKER-RUN') { dockimg = z.Run.split(' ')[0]; }
-	if (z.Type == 'HTML') { runrun = "docker stop " + dockid + " ; docker rm " + dockid + " ; docker run --rm --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/www cogsmith/wx-static --port 9 --ip 0.0.0.0 --www /www --base /"; let basepath = cz.join('/').replace(slug + '/web/raw/', ''); if (basepath != '@') { runrun += basepath + '/' }; RUN.push(runrun); }
+	//if (z.Type == 'HTML') { runrun = "docker stop " + dockid + " ; docker rm " + dockid + " ; docker run --rm --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/www cogsmith/wx-static --port 9 --ip 0.0.0.0 --www /www --base /"; let basepath = cz.join('/').replace(slug + '/web/raw/', ''); if (basepath != '@') { runrun += basepath + '/' }; RUN.push(runrun); }
 	//if (z.Type == 'APPJS') { RUN.push("docker stop " + dockid + " ; docker rm " + dockid + " ; docker run --rm --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/app node node /app/app.js --port 9 --ip 0.0.0.0"); }
 	if (z.Type == 'APPJS') { RUN.push("docker stop " + dockid + " ; docker rm " + dockid + " ; docker run --rm --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/app cogsmith/nodemon nodemon /app/app.js --port 9 --ip 0.0.0.0"); }
 	if (z.Type == 'DOCKER-RUN') { RUN.push("docker stop " + dockid + " ; docker rm " + dockid + " ; docker run --rm --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + "/data:/app/data " + z.Run + " --port 9 --ip 0.0.0.0"); }
@@ -224,9 +224,15 @@ App.Load = function (cell) {
 	console.log(cmd);
 	execa.command(cmd, { shell: true }).stdout.pipe(process.stdout);
 
-	if (cell == 'ALL') { return App.LoadAll(); }
-	else if (!cell.split('/')[1]) { return App.LoadSlug(cell); }
-	else { return App.LoadCell(cell); }
+	let cmd = "docker stop ZXWEB_" + App.Hive + " ; docker rm ZXWEB_" + App.Hive + " ; docker run -t --name ZXWEB_" + App.Hive + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " -p " + App.HiveBind + ":80:88 -v " + App.HivePath + "/" + App.Hive + ":/webhost cogsmith/wx-static --loglevel trace --port 9 --ip 0.0.0.0 --www /webhost --base / --vhost";
+	console.log(cmd);
+	execa.command(cmd, { shell: true }).stdout.pipe(process.stdout);
+
+	setTimeout(function () {
+		if (cell == 'ALL') { return App.LoadAll(); }
+		else if (!cell.split('/')[1]) { return App.LoadSlug(cell); }
+		else { return App.LoadCell(cell); }
+	}, 999);
 }
 
 App.CallLoad = function (cell) {
