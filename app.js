@@ -136,6 +136,8 @@ App.LoadCell = function (cell) {
 	if (z.Type == 'DOCKER-RUN') { z.Run = fs.readFileSync('/hive' + '/' + cell + '/' + 'docker.run') + ''; }
 	if (z.Type == 'GOTO-URL') { z.GotoURL = fs.readFileSync('/hive' + '/' + cell + '/' + 'GOTO.URL') + ''; }
 
+	console.log({Z:z});
+
 	App.PortDB[port] = z;
 	App.CellDB[cell] = z;
 
