@@ -155,7 +155,7 @@ App.LoadCell = function (cell) {
 		if (kk.startsWith('.')) { kk = kk.substr(1) + '_/*'; }
 		console.log('K = ' + k + '  ||  ' + 'KK = ' + kk);
 		// map[kk] = (!k.substr(-1) == '!' ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
-		map[kk] = (!k.includes('/') ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
+		map[kk+'/*'] = (!k.includes('/') ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
 	});
 
 	fs.mkdirSync('/hive/WEBGATE', { recursive: true });
