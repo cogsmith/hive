@@ -128,11 +128,13 @@ App.LoadCell = function (cell) {
 
 	if (fs.existsSync('/hive' + '/' + cell + '/' + 'app.js')) { type = 'APPJS'; }
 	if (fs.existsSync('/hive' + '/' + cell + '/' + 'docker.run')) { type = 'DOCKER-RUN'; }
+	if (fs.existsSync('/hive' + '/' + cell + '/' + 'GOTO.URL')) { type = 'GOTO-URL'; }
 
 	let port = 0; if (App.CellDB[cell]) { port = App.CellDB[cell].Port; } else if (type == 'HTML') { port = 88; } else { port = App.PortGet(); }
 	let z = { Port: port, Slug: slug, Host: host, Type: type, Base: base, Path: path, Cell: cell };
 
 	if (z.Type == 'DOCKER-RUN') { z.Run = fs.readFileSync('/hive' + '/' + cell + '/' + 'docker.run') + ''; }
+	if (z.Type == 'GOTO-URL') { z.GotoURL = fs.readFileSync('/hive' + '/' + cell + '/' + 'GOTO.URL') + ''; }
 
 	App.PortDB[port] = z;
 	App.CellDB[cell] = z;
@@ -160,7 +162,7 @@ App.LoadCell = function (cell) {
 		// map[kk] = (!k.substr(-1) == '!' ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
 		//map[mapkey] = (!k.includes('/') ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
 		let mapkey = kk; if (!kk.includes('/')) { } else { mapkey += '/*' };
-		map[mapkey] = '@http://' + App.HiveBind + ':' + z.Port;
+		map[mapkey] = z.GotoURL || '@http://' + App.HiveBind + ':' + z.Port;
 		console.log('K = ' + k + '  ||  ' + 'KK = ' + kk + ' || ' + 'MAPKEY = ' + mapkey);
 	});
 
