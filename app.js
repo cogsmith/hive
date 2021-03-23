@@ -155,7 +155,7 @@ App.LoadCell = function (cell) {
 		if (kk.startsWith('.')) { kk = kk.substr(1) + '_/*'; }
 		// map[kk] = (!k.substr(-1) == '!' ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
 		//map[mapkey] = (!k.includes('/') ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
-		let mapkey = kk; if (!kk.includes('/')) { mapkey = '!' } else { mapkey += '/*' };
+		let mapkey = kk; if (!kk.includes('/')) { mapkey = kk + '/!' } else { mapkey += '/*' };
 		map[mapkey] = '@http://' + App.HiveBind + ':' + z.Port;
 		console.log('K = ' + k + '  ||  ' + 'KK = ' + kk + ' || ' + 'MAPKEY = ' + mapkey);
 	});
