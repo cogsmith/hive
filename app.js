@@ -224,7 +224,7 @@ App.Load = function (cell) {
 	console.log(cmd);
 	execa.command(cmd, { shell: true }).stdout.pipe(process.stdout);
 
-	let cmd88 = "docker stop ZXWEB_" + App.Hive + " ; docker rm ZXWEB_" + App.Hive + " ; docker run -t --name ZXWEB_" + App.Hive + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " -p " + App.HiveBind + ":88:9 -v " + App.HivePath + "/" + App.Hive + ":/webhost cogsmith/wx-static --loglevel trace --port 9 --ip 0.0.0.0 --www /webhost --base / --vhost";
+	let cmd88 = "docker stop ZXWEB_" + App.Hive + " ; docker rm ZXWEB_" + App.Hive + " ; docker run -t --name ZXWEB_" + App.Hive + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " -p " + App.HiveBind + ":88:9 -v " + App.HivePath + "/" + App.Hive + ":/webhost cogsmith/wx-static --loglevel trace --port 9 --ip 0.0.0.0 --www /webhost --base / --vhost --xhost";
 	console.log(cmd88);
 	execa.command(cmd88, { shell: true }).stdout.pipe(process.stdout);
 
