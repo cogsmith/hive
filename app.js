@@ -1,5 +1,7 @@
 process.onSIGTERM = function () { process.exit(); }; process.on('SIGTERM', function () { process.onSIGTERM(); });
 
+process.setMaxListeners(999);
+
 const fs = require('fs');
 const path = require('path');
 
