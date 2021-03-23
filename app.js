@@ -153,10 +153,11 @@ App.LoadCell = function (cell) {
 		k = k.replace('/web/raw/@', '').replace('/web/raw/_', '/_').replace('/web/raw/', '/').replace('/web/app/@', '').replace('/web/app/_', '/_').replace('/web/app/', '/');
 		let kk = App.GetSlugHost(k.toLowerCase());
 		if (kk.startsWith('.')) { kk = kk.substr(1) + '_/*'; }
-		console.log('K = ' + k + '  ||  ' + 'KK = ' + kk);
 		// map[kk] = (!k.substr(-1) == '!' ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
-		let mapkey = kk; if (kk == '/') { mapkey = '!' } else { mapkey += '/*' };
-		map[mapkey] = (!k.includes('/') ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
+		//map[mapkey] = (!k.includes('/') ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
+		let mapkey = kk; if (!kk.includes('/')) { mapkey = '!' } else { mapkey += '/*' };
+		map[mapkey] = '@http://' + App.HiveBind + ':' + z.Port;
+		console.log('K = ' + k + '  ||  ' + 'KK = ' + kk + ' || ' + 'MAPKEY = ' + mapkey);
 	});
 
 	fs.mkdirSync('/hive/WEBGATE', { recursive: true });
