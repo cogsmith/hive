@@ -1,12 +1,12 @@
 {
-	"version": "0.0.5",
-	"namelong": "ZX-Hive",
-	"name": "zx-hive",
-	"description": "Docker Orchestration Magic",
+	"version": "0.0.6",
+	"namelong": "HIVE",
+	"name": "hive",
+	"description": "Docker Auto Backend System",
 	"keywords": [],
-	"homepage": "https://cogsmith.com/project/0",
+	"homepage": "https://cogsmith.com",
 	"license": "http://cogsmith.com/license/public",
-	"repository": "github:cogsmith/zx-hive",
+	"repository": "github:cogsmith/hive",
 	"private": true,
 	"author": {
 		"name": "David Adam Coffey",
