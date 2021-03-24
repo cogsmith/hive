@@ -159,8 +159,8 @@ App.LoadCell = function (cell) {
 	kz.forEach((k) => {
 		let z = App.CellDB[k];
 		k = k.replace('/web/raw/@', '').replace('/web/raw/_', '/_').replace('/web/raw/', '/').replace('/web/app/@', '').replace('/web/app/_', '/_').replace('/web/app/', '/');
-		let kk = App.GetSlugHost(k.toLowerCase()); kk =
-			console.log('K = ' + k + '  ||  ' + 'KK = ' + kk);
+		let kk = App.GetSlugHost(k.toLowerCase());
+		console.log('K = ' + k + '  ||  ' + 'KK = ' + kk);
 		if (kk.startsWith('.')) { kk = kk.substr(1) + '_/*'; }
 		// map[kk] = (!k.substr(-1) == '!' ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
 		//map[mapkey] = (!k.includes('/') ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
