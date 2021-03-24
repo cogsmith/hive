@@ -5,6 +5,6 @@ COPY ["package.json","package-lock.json*","./"]
 RUN npm install --production
 RUN apk add docker
 RUN apk add curl
-RUN node --check /app/app.js
 COPY . .
+RUN node --check /app/app.js
 ENTRYPOINT ["node","app.js"]
