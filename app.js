@@ -130,7 +130,7 @@ App.LoadCell = function (cell) {
 	if (fs.existsSync('/hive' + '/' + cell + '/' + 'docker.run')) { type = 'DOCKER-RUN'; }
 	if (fs.existsSync('/hive' + '/' + cell + '/' + 'GOTO.URL')) { type = 'GOTO-URL'; }
 
-	let port = 0; if (App.CellDB[cell]) { port = App.CellDB[cell].Port; } else if (type == 'HTML') { port = 88; } else { port = App.PortGet(); }
+	let port = 0; if (App.CellDB[cell]) { port = App.CellDB[cell].Port; } else if (type == 'HTML' && cell.substr(-1) == '@') { port = 88; } else { port = App.PortGet(); }
 	let z = { Port: port, Slug: slug, Host: host, Type: type, Base: base, Path: path, Cell: cell };
 
 	if (z.Type == 'DOCKER-RUN') { z.Run = fs.readFileSync('/hive' + '/' + cell + '/' + 'docker.run') + ''; }
@@ -184,6 +184,7 @@ App.LoadSlug = function (slug) {
 	for (let i = 0; i < dirsraw.length; i++) {
 		let x = dirsraw[i];
 		if (glob.sync(slugpath + '/web/raw/' + x + '/' + '*.html').length > 0) { App.LoadCell(slug + '/' + 'web/raw' + '/' + x); }
+		if (fs.existsSync(slugpath + '/web/raw/' + x + '/' + 'GOTO.URL')) { App.LoadCell(slug + '/' + 'web/raw' + '/' + x); }
 	}
 
 	let dirsapp = []; try { dirsapp = fs.readdirSync(slugpath + '/web/app') } catch (ex) { };
