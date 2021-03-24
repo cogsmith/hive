@@ -171,8 +171,9 @@ App.LoadCell = function (cell) {
 	fs.mkdirSync('/hive/WEBGATE', { recursive: true }); fs.writeFileSync('/hive/WEBGATE/HIVE.MAP', yaml.dump(map));
 }
 
-App.GetHostSlug = function (host) { let slug = host.replace(/\./g, '_').toUpperCase(); let z = slug.split('_'); if (z.length >= 3) { slug = z.slice(-2).join('_') + '_' + z.slice(0, z.length - 2).reverse().join('_'); }; return slug; };
-App.GetSlugHost = function (slug) { let host = slug.replace(/_/g, '.'); let z = slug.split('_'); if (z.length >= 2) { host = _.concat(z.slice(2).reverse(), z.slice(0, 2)).join('.'); }; return host; };
+App.GetHostSlug = function (host) { if (!host) { return host; } let slug = host.replace(/\./g, '_').toUpperCase(); let z = slug.split('_'); if (z.length >= 3) { slug = z.slice(-2).join('_') + '_' + z.slice(0, z.length - 2).reverse().join('_'); }; return slug; };
+App.GetSlugHost = function (slug) { if (!slug) { return slug; } let host = slug.replace(/_/g, '.'); let z = slug.split('_'); if (z.length >= 2) { host = z.slice(2).reverse().join('.') + '.' + z.slice(0, 2).join('.'); }; return host; };
+//App.GetSlugHost = function (slug) { if (!slug) { return slug; } let host = slug.replace(/_/g, '.'); let z = slug.split('_'); if (z.length >= 2) { host = _.concat(z.slice(2).reverse(), z.slice(0, 2)).join('.'); }; return host; };
 
 App.LoadSlug = function (slug) {
 	let slugpath = '/hive' + '/' + slug;
