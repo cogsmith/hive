@@ -151,7 +151,7 @@ App.LoadCell = function (cell) {
 	if (z.Type == 'APPJS') { RUN.push("docker stop " + dockid + " ; docker rm " + dockid + " ; docker run --rm --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/app cogsmith/nodemon nodemon /app/app.js --port 9 --ip 0.0.0.0"); }
 	if (z.Type == 'DOCKER-RUN') { RUN.push("docker stop " + dockid + " ; docker rm " + dockid + " ; docker run --rm --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + "/data:/app/data " + z.Run + " --port 9 --ip 0.0.0.0"); }
 
-	console.log(RUN);
+	//console.log(RUN);
 	RUN.forEach(x => { console.log('CMD: ' + x); execa.command(x, { shell: true }).stdout.pipe(process.stdout); });
 
 	let map = {};
