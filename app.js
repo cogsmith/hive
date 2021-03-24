@@ -165,11 +165,10 @@ App.LoadCell = function (cell) {
 		//map[mapkey] = (!k.includes('/') ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
 		let mapkey = kk; if (!kk.includes('/')) { } else { mapkey += '/*' };
 		map[mapkey] = z.GotoURL || '@http://' + App.HiveBind + ':' + z.Port;
-		//console.log('K = ' + k + '  ||  ' + 'KK = ' + kk + ' || ' + 'MAPKEY = ' + mapkey);
+		console.log('K = ' + k + '  ||  ' + 'KK = ' + kk + ' || ' + 'MAPKEY = ' + mapkey);
 	});
 
-	fs.mkdirSync('/hive/WEBGATE', { recursive: true });
-	fs.writeFileSync('/hive/WEBGATE/HIVE.MAP', yaml.dump(map));
+	fs.mkdirSync('/hive/WEBGATE', { recursive: true }); fs.writeFileSync('/hive/WEBGATE/HIVE.MAP', yaml.dump(map));
 }
 
 App.GetHostSlug = function (host) { let slug = host.replace(/\./g, '_').toUpperCase(); let z = slug.split('_'); if (z.length >= 3) { slug = z.slice(-2).join('_') + '_' + z.slice(0, z.length - 2).reverse().join('_'); }; return slug; };
