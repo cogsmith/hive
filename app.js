@@ -136,7 +136,7 @@ App.LoadCell = function (cell) {
 	if (z.Type == 'DOCKER-RUN') { z.Run = fs.readFileSync('/hive' + '/' + cell + '/' + 'docker.run') + ''; }
 	if (z.Type == 'GOTO-URL') { z.GotoURL = fs.readFileSync('/hive' + '/' + cell + '/' + 'GOTO.URL') + ''; }
 
-	console.log({Z:z});
+	//console.log({Z:z});
 
 	App.PortDB[port] = z;
 	App.CellDB[cell] = z;
@@ -165,7 +165,7 @@ App.LoadCell = function (cell) {
 		//map[mapkey] = (!k.includes('/') ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
 		let mapkey = kk; if (!kk.includes('/')) { } else { mapkey += '/*' };
 		map[mapkey] = z.GotoURL || '@http://' + App.HiveBind + ':' + z.Port;
-		console.log('K = ' + k + '  ||  ' + 'KK = ' + kk + ' || ' + 'MAPKEY = ' + mapkey);
+		//console.log('K = ' + k + '  ||  ' + 'KK = ' + kk + ' || ' + 'MAPKEY = ' + mapkey);
 	});
 
 	fs.mkdirSync('/hive/WEBGATE', { recursive: true });
@@ -224,7 +224,7 @@ App.Load = function (cell) {
 	fs.writeFileSync('/hive/WWW/.well-known/acme-challenge/acme.txt', 'ACME');
 
 	let adminips = ''; for (let i = 0; i < App.AdminIP.length; i++) { let ip = App.AdminIP[i]; if (ip) { adminips += '--admin ' + ip + ' ' }; }
-	let cmd = "docker stop ZXPROXY_" + App.Hive + " ; docker rm ZXPROXY_" + App.Hive + " ; docker run -t --name ZXPROXY_" + App.Hive + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " -p " + App.HiveBind + ":80:80 -p " + App.HiveBind + ":443:443 -v " + App.HivePath + "/" + App.Hive + ":/webgate cogsmith/hive-proxy " + adminips + " --public " + App.HiveIP + " --private " + App.HiveBind + " --to " + App.HiveBind + ' --mapfile WEBGATE/GATE.MAP --mapfile WEBGATE/HIVE.MAP --loglevel trace';
+	let cmd = "docker stop ZXPROXY_" + App.Hive + " ; docker rm ZXPROXY_" + App.Hive + " ; docker run -t --name ZXPROXY_" + App.Hive + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " -p " + App.HiveBind + ":80:80 -p " + App.HiveBind + ":443:443 -v " + App.HivePath + "/" + App.Hive + ":/webgate cogsmith/hive-proxy " + adminips + " --public " + App.HiveIP + " --private " + App.HiveBind + " --to " + App.HiveBind + ' --mapfile WEBGATE/GATE.MAP --mapfile WEBGATE/HIVE.MAP --mapfile WEBGATE/GOTO.MAP --loglevel trace';
 	console.log(cmd);
 	execa.command(cmd, { shell: true }).stdout.pipe(process.stdout);
 
