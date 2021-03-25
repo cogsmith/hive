@@ -1,7 +1,12 @@
-process.onSIGTERM = function () { process.exit(); }; process.on('SIGTERM', function () { process.onSIGTERM(); });
+const NOP = function () { };
+process.setMaxListeners(999); require('events').EventEmitter.prototype._maxListeners = 999;
+process.on('uncaughtException', function (err) { console.log("\n"); console.log(err); console.log("\n"); process.exit(1); }); // throw(Error('ERROR'));
+process.onSIGTERM = function () { console.log('SIGTERM'); process.exit(); }; process.on('SIGTERM', function () { process.onSIGTERM(); });
 
-process.setMaxListeners(999);
-require('events').EventEmitter.prototype._maxListeners = 999;
+const util = require('util');
+const wait = util.promisify(setTimeout);
+
+//
 
 const fs = require('fs');
 const path = require('path');
@@ -255,6 +260,8 @@ App.CallStop = function (cell) {
 }
 
 App.Init = function () {
+	process.onSIGTERM = function () { LOG.WARN('App.Process: SIGTERM'); App.Exit(1); };
+
 	fastify.log.info('App.Init');
 	if (App.Do == 'NUKE') { App.Nuke(); }
 	if (App.Do == 'RUN') { App.RunInit(); }
