@@ -260,7 +260,7 @@ App.CallStop = function (cell) {
 }
 
 App.Init = function () {
-	process.onSIGTERM = function () { LOG.WARN('App.Process: SIGTERM'); setTimeout(function () { App.Exit(1); }, 2500); };
+	process.onSIGTERM = function () { console.log('App.Process: SIGTERM'); setTimeout(function () { App.Exit(1); }, 2500); };
 
 	fastify.log.info('App.Init');
 	if (App.Do == 'NUKE') { App.Nuke(); }
