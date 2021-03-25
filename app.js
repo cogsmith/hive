@@ -246,7 +246,7 @@ App.Load = function (cell) {
 		if (cell == 'ALL') { return App.LoadAll(); }
 		else if (!cell.split('/')[1]) { return App.LoadSlug(cell); }
 		else { return App.LoadCell(cell); }
-	}, 999);
+	}, 2500);
 }
 
 App.CallLoad = function (cell) {
