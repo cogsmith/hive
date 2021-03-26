@@ -1,4 +1,4 @@
-# 🔥 HIVE: Docker Auto Backend System 🔥
+# ⚡ HIVE: Docker Auto Backend System ⚡
 ## Easily deploy and host microservices and multiple domains from filesystem
 
 ---
