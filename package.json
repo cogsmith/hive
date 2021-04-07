@@ -1,5 +1,5 @@
 {
-	"version": "0.0.6",
+	"version": "0.2.0-dev",
 	"namelong": "HIVE",
 	"name": "hive",
 	"description": "Docker Auto Backend System",

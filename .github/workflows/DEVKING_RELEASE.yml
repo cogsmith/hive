@@ -1,0 +1,16 @@
+name: DEVKING_RELEASE
+on:
+  workflow_dispatch:
+    inputs:  
+      NEXTVERSION:
+        required: true
+        default: 'PATCH'
+        description: 'NEXTVERSION'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: cogsmith/devking-release@main
