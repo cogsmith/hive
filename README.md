@@ -9,7 +9,7 @@
 
 ---
 
-<h1><code><a href='https://github.com/cogsmith/hive/blob/main/app.js'>[VIEW APP SOURCE CODE]</a></code></h1>
+<h1><code><a href='https://github.com/cogsmith/hive/blob/main/app.js'>📄 [VIEW APP SOURCE CODE]</a></code></h1>
 
 ---
 
