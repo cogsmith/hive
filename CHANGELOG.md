@@ -1,5 +1,15 @@
 <code>
 
+# [0.2.3](https://github.com/cogsmith/hive/compare/0.2.3...main) @ [2021-04-10](https://github.com/cogsmith/hive/releases/tag/0.2.3) 
+
+## DIFF
+- [1 COMMITS SINCE LAST TAG = 0.2.2](https://github.com/cogsmith/hive/compare/0.2.2...0.2.3)
+
+</code>
+
+---
+<code>
+
 # [0.2.2](https://github.com/cogsmith/hive/compare/0.2.2...main) @ [2021-04-10](https://github.com/cogsmith/hive/releases/tag/0.2.2) 
 
 ## DIFF
