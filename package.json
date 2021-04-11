@@ -1,5 +1,5 @@
 {
-  "version": "0.2.2-dev",
+  "version": "0.2.2",
   "namelong": "HIVE",
   "name": "hive",
   "description": "Docker Auto Backend System",
@@ -28,5 +28,5 @@
     "lodash": "^4.17.21",
     "yargs": "^16.2.0"
   },
-  "versiontaglast": "0.2.1"
+  "versiontaglast": "0.2.2"
 }
