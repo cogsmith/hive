@@ -174,7 +174,7 @@ App.LoadCell = function (cell) {
 		map[mapkey] = z.GotoURL || '@http://' + App.HiveBind + ':' + z.Port;
 		console.log('K = ' + k + '  ||  ' + 'KK = ' + kk + ' || ' + 'MAPKEY = ' + mapkey);
 	});
-	fs.mkdirSync('/hive/WEBGATE', { recursive: true }); fs.writeFileSync('/hive/WEBGATE/MAPS/HIVE.MAP', yaml.dump(map));
+	fs.mkdirSync('/hive/WEBGATE/MAPS', { recursive: true }); fs.writeFileSync('/hive/WEBGATE/MAPS/HIVE.MAP', yaml.dump(map));
 }
 
 //
