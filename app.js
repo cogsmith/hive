@@ -171,7 +171,10 @@ App.LoadCell = function (cell) {
 		// map[kk] = (!k.substr(-1) == '!' ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
 		//map[mapkey] = (!k.includes('/') ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
 		let mapkey = kk; // if (!kk.includes('/')) { } else { mapkey += '/*' };
-		map[mapkey] = z.GotoURL || '@http://' + App.HiveBind + ':' + z.Port;
+
+		// map[mapkey] = z.GotoURL || '@' + 'http://' + App.HiveBind + ':' + z.Port;
+		map[mapkey] = z.GotoURL || 'http://' + App.HiveBind + ':' + z.Port;
+
 		console.log('K = ' + k + '  ||  ' + 'KK = ' + kk + ' || ' + 'MAPKEY = ' + mapkey);
 	});
 	fs.mkdirSync('/hive/WEBGATE/MAPS', { recursive: true }); fs.writeFileSync('/hive/WEBGATE/MAPS/HIVE.MAP', yaml.dump(map));
