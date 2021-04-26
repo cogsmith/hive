@@ -173,7 +173,7 @@ App.LoadCell = function (cell) {
 		let mapkey = kk; // if (!kk.includes('/')) { } else { mapkey += '/*' };
 
 		// map[mapkey] = z.GotoURL || '@' + 'http://' + App.HiveBind + ':' + z.Port;
-		map[mapkey] = z.GotoURL || 'http://' + App.HiveBind + ':' + z.Port;
+		map[mapkey] = z.GotoURL || '^' + 'http://' + App.HiveBind + ':' + z.Port;
 
 		console.log('K = ' + k + '  ||  ' + 'KK = ' + kk + ' || ' + 'MAPKEY = ' + mapkey);
 	});
