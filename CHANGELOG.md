@@ -1,5 +1,18 @@
 <code>
 
+# [0.2.5](https://github.com/cogsmith/hive/compare/0.2.5...main) @ [2021-04-26](https://github.com/cogsmith/hive/releases/tag/0.2.5) 
+
+## DIFF
+- [0 COMMITS SINCE LAST TAG = 0.2.4](https://github.com/cogsmith/hive/compare/0.2.4...0.2.5)
+
+## FEATURE
+- [#1: NPM Install Before AppJS Docker Run](https://github.com/cogsmith/hive/issues/1)
+
+</code>
+
+---
+<code>
+
 # [0.2.4](https://github.com/cogsmith/hive/compare/0.2.4...main) @ [2021-04-26](https://github.com/cogsmith/hive/releases/tag/0.2.4) 
 
 ## DIFF
