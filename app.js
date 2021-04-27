@@ -171,7 +171,7 @@ App.GetSlugHost = function (slug) { if (!slug) { return slug; } let host = slug.
 App.LoadSlug = function (slug) {
 	let slugpath = '/hive' + '/' + slug;
 	let host = App.GetSlugHost(slug);
-	LOG.Info('App.LoadSlug: ' + slug + ' @ ' + slugpath);
+	LOG.INFO('App.LoadSlug: ' + slug + ' @ ' + slugpath);
 
 	let dirsraw = []; try { dirsraw = fs.readdirSync(slugpath + '/web/raw') } catch (ex) { }
 	for (let i = 0; i < dirsraw.length; i++) {
@@ -189,7 +189,7 @@ App.LoadSlug = function (slug) {
 }
 
 App.LoadAll = function () {
-	LOG.Info('App.LoadAll: ' + App.Hive);
+	LOG.INFO('App.LoadAll: ' + App.Hive);
 	let hivepath = '/hive'; // let hivepath = App.HivePath;
 	let slugs = fs.readdirSync(hivepath);
 	for (let i = 0; i < slugs.length; i++) {
@@ -205,14 +205,12 @@ App.LoadAll = function () {
 }
 
 App.Load = function (cell) {
-	LOG.Info('App.Load: ' + cell);
+	LOG.INFO('App.Load: ' + cell);
 
 	let slug = cell.split('/')[0];
 	let slughost = App.GetSlugHost(slug);
 
-	LOG.Debug("\n\n\n\n");
-	LOG.Debug([App.HivePath, App.Hive]);
-	LOG.Debug("\n\n\n\n");
+	LOG.DEBUG([App.HivePath, App.Hive]);
 
 	fs.mkdirSync('/hive/WWW/.well-known/acme-challenge', { recursive: true });
 	fs.writeFileSync('/hive/WWW/.well-known/acme-challenge/acme.txt', 'ACME');
