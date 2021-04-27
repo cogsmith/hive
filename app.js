@@ -62,7 +62,7 @@ App.InitData = function () {
 }
 
 App.RunInit = function () {
-	fastify.log.info('App.RunInit');
+	LOG.DEBUG('App.RunInit');
 
 	try { execa.commandSync('docker container stop $(docker container ls -q --filter name=ZX_' + App.Hive + '_*) ; docker container rm $(docker container ls -q --filter name=ZX_' + App.Hive + '_*)', { shell: true }).stdout.pipe(process.stdout); } catch (ex) { };
 
@@ -83,7 +83,7 @@ App.RunInit = function () {
 
 	fastify.get('/zx/db/json', function (req, rep) { rep.send({ CellDB: App.CellDB, PortDB: App.PortDB }); });
 
-	fastify.listen(App.Port, App.IP, (err, address) => { if (err) { LOG.Error(err); throw err; } else { fastify.log.info('App.RunInit:Done'); App.RunMain(); } });
+	fastify.listen(App.Port, App.IP, (err, address) => { if (err) { LOG.Error(err); throw err; } else { LOG.DEBUG('App.RunInit:Done'); App.RunMain(); } });
 }
 
 App.Nuke = function () {
@@ -93,7 +93,7 @@ App.Nuke = function () {
 
 App.Stop = function (cell) {
 	if (App.CellDB[cell]) {
-		fastify.log.info('App.Stop = ' + cell);
+		LOG.INFO('App.Stop = ' + cell);
 		try {
 			execa.commandSync('docker container stop $(docker container ls -q --filter name=ZX_' + App.Hive + '_' + App.CellDB[cell].Port + ')', { shell: true });
 			execa.commandSync('docker container rm   $(docker container ls -q --filter name=ZX_' + App.Hive + '_' + App.CellDB[cell].Port + ')', { shell: true });
@@ -232,19 +232,19 @@ App.Load = function (cell) {
 }
 
 App.CallLoad = function (cell) {
-	fastify.log.info('App.CallLoad = ' + cell);
+	LOG.INFO('App.CallLoad = ' + cell);
 	axios.get('http://127.0.0.1:99/zx/hive/load', { params: { cell: cell } }).then(function (res) { console.log(res.data); }).catch(function (err) { console.error(err); }); //.then(function () { console.log('AXIOS.THEN'); });
 }
 
 App.CallStop = function (cell) {
-	fastify.log.info('App.CallStop = ' + cell);
+	LOG.INFO('App.CallStop = ' + cell);
 	axios.get('http://127.0.0.1:99/zx/hive/stop', { params: { cell: cell } }).then(function (res) { console.log(res.data); }).catch(function (err) { console.error(err); }); //.then(function () { console.log('AXIOS.THEN'); });
 }
 
 App.Init = function () {
 	process.onSIGTERM = function () { console.log('App.Process: SIGTERM'); setTimeout(function () { App.Exit(1); }, 2500); };
 
-	fastify.log.info('App.Init');
+	LOG.INFO('App.Init');
 	if (App.Do == 'NUKE') { App.Nuke(); }
 	if (App.Do == 'RUN') { App.RunInit(); }
 	if (App.Do == 'STOP') { App.CallStop(App.Cell); }
@@ -252,7 +252,7 @@ App.Init = function () {
 };
 
 App.RunMain = function () {
-	fastify.log.info('App.RunMain');
+	LOG.INFO('App.RunMain');
 	if (App.Cell) { App.CallLoad(App.Cell); }
 };
 
