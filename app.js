@@ -1,13 +1,3 @@
-const NOP = function () { };
-process.setMaxListeners(999); require('events').EventEmitter.prototype._maxListeners = 999;
-process.on('uncaughtException', function (err) { console.log("\n"); console.log(err); console.log("\n"); process.exit(1); }); // throw(Error('ERROR'));
-process.onSIGTERM = function () { console.log('SIGTERM'); setTimeout(process.exit, 2500); }; process.on('SIGTERM', function () { process.onSIGTERM(); });
-
-const util = require('util');
-const wait = util.promisify(setTimeout);
-
-//
-
 const fs = require('fs');
 const path = require('path');
 
@@ -18,29 +8,22 @@ const yargs = require('yargs/yargs');
 const execa = require('execa');
 const axios = require('axios').default;
 
-const LOG = console.log;
-LOG.Trace = LOG;
-LOG.Debug = LOG;
-LOG.Info = LOG;
-LOG.Warn = LOG;
-LOG.Error = LOG;
-LOG.Fatal = LOG;
-LOG.Null = function () { };
+//
+
+//const XT = require('/DEV/CODE/xtdev/node_modules/@cogsmith/xt');
+const XT = require('@cogsmith/xt');
+const LOG = XT.Log;
+const App = XT.App;
+
+//
 
 const fastify = require('fastify')({
 	logger: true, maxParamLength: 999, ignoreTrailingSlash: false,
 });
 
-const AppJSON = require('./package.json');
-const AppMeta = {
-	Version: AppJSON.version || process.env.npm_package_version || '0.0.0',
-	Name: AppJSON.namelong || AppJSON.name || 'App',
-	Info: AppJSON.description || '',
-}; AppMeta.Full = AppMeta.Name + ': ' + AppMeta.Info + ' [' + AppMeta.Version + ']';
-
-const AppArgs =
-	yargs(process.argv).wrap(125)
-		.usage("\n" + AppMeta.Full + "\n\n" + 'USAGE: node $0 [options]')
+App.InitArgs = function () {
+	App.Argy = yargs(process.argv).wrap(125)
+		.usage("\n" + App.Meta.Full + "\n\n" + 'USAGE: node $0 [options]')
 		.epilog('DT: ' + new Date().toISOString() + "\n\n" + process.argv.join(' ') + "\n")
 		.demandOption(['ip', 'port']) // ,'hivepath','hive'])
 		.describe('v', 'Logging Level').default('v', 0).alias('v', 'verbose').count('verbose')
@@ -52,33 +35,31 @@ const AppArgs =
 		.describe('cell', 'Cell ID')
 		.describe('hiveip', 'Hive Public IP').default('hiveip', '127.0.0.1')
 		.describe('hivebind', 'Hive Bind IP').default('hivebind', '127.0.0.1')
-		.describe('admin', 'Admin IP').default('adminip', null).array('adminip')
-		.showHelp('log')
-		.argv; console.log(); // console.log(AppArgs);
+		.describe('admin', 'Admin IP').default('adminip', null).array('adminip');
 
-const App = {
-	AppJSON: AppJSON,
-	Args: AppArgs,
-	Meta: AppMeta,
-	Requests: 0,
-	Clients: {},
-	Port: AppArgs.port,
-	IP: AppArgs.ip,
-	Hive: AppArgs.hive,
-	HivePath: AppArgs.hivepath,
-	Do: AppArgs.do.toUpperCase(),
-	Cell: AppArgs.cell,
-	HiveIP: AppArgs.hiveip,
-	HiveBind: AppArgs.hivebind,
-	AdminIP: AppArgs.adminip,
-};
+	let AppArgs = App.Argy.argv;
+	App.Args = AppArgs;
+	App.AdminIP = AppArgs.adminip;
+	App.Requests = 0;
+	App.Clients = {};
+	App.Port = AppArgs.port;
+	App.IP = AppArgs.ip;
+	App.Hive = AppArgs.hive;
+	App.HivePath = AppArgs.hivepath;
+	App.Do = AppArgs.do.toUpperCase();
+	App.Cell = AppArgs.cell;
+	App.HiveIP = AppArgs.hiveip;
+	App.HiveBind = AppArgs.hivebind;
+}
 
-App.PortFirst = 9000;
-App.PortNext = App.PortFirst + 1;
-App.PortGet = function () { return App.PortNext++; }
+App.InitData = function () {
+	App.PortFirst = 9000;
+	App.PortNext = App.PortFirst + 1;
+	App.PortGet = function () { return App.PortNext++; }
 
-App.PortDB = {};
-App.CellDB = {};
+	App.PortDB = {};
+	App.CellDB = {};
+}
 
 App.RunInit = function () {
 	fastify.log.info('App.RunInit');
@@ -277,4 +258,6 @@ App.RunMain = function () {
 	if (App.Cell) { App.CallLoad(App.Cell); }
 };
 
-App.Init();
+//
+
+App.Run();
