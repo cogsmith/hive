@@ -1,5 +1,18 @@
 <code>
 
+# [0.2.6](https://github.com/cogsmith/hive/compare/0.2.6...main) @ [2021-04-27](https://github.com/cogsmith/hive/releases/tag/0.2.6) 
+
+## DIFF
+- [3 COMMITS SINCE LAST TAG = 0.2.5](https://github.com/cogsmith/hive/compare/0.2.5...0.2.6)
+
+## INFO
+- Use New XT.App Lib
+
+</code>
+
+---
+<code>
+
 # [0.2.5](https://github.com/cogsmith/hive/compare/0.2.5...main) @ [2021-04-26](https://github.com/cogsmith/hive/releases/tag/0.2.5) 
 
 ## DIFF
