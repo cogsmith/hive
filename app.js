@@ -146,7 +146,9 @@ App.LoadCell = function (cell) {
 		let z = App.CellDB[k];
 		k = k.replace('/web/raw/@', '').replace('/web/raw/_', '/_').replace('/web/raw/', '/').replace('/web/app/@', '').replace('/web/app/_', '/_').replace('/web/app/', '/');
 		let kk = App.GetSlugHost(k.toLowerCase());
-		console.log('K = ' + k + '  ||  ' + 'KK = ' + kk);
+
+		//console.log('K = ' + k + '  ||  ' + 'KK = ' + kk);
+
 		if (kk.startsWith('.')) { kk = kk.substr(1); }
 		if (kk.includes('/')) { kk = kk + '/*'; }
 		// map[kk] = (!k.substr(-1) == '!' ? '@' : '') + 'http://' + App.HiveBind + ':' + z.Port;
@@ -156,7 +158,7 @@ App.LoadCell = function (cell) {
 		// map[mapkey] = z.GotoURL || '@' + 'http://' + App.HiveBind + ':' + z.Port;
 		map[mapkey] = z.GotoURL || '^' + 'http://' + App.HiveBind + ':' + z.Port;
 
-		console.log('K = ' + k + '  ||  ' + 'KK = ' + kk + ' || ' + 'MAPKEY = ' + mapkey);
+		//console.log('K = ' + k + '  ||  ' + 'KK = ' + kk + ' || ' + 'MAPKEY = ' + mapkey);
 	});
 	fs.mkdirSync('/hive/WEBGATE/MAPS', { recursive: true }); fs.writeFileSync('/hive/WEBGATE/MAPS/HIVE.MAP', yaml.dump(map));
 }
@@ -195,11 +197,19 @@ App.LoadAll = function () {
 	for (let i = 0; i < slugs.length; i++) {
 		let slug = slugs[i]; let host = App.GetSlugHost(slug);
 		if (slug == 'ACME') { continue; }
-		if (slug == 'WWW') { continue; } if (slug == 'ZWWW') { continue; }
+		if (slug == 'WWW') { continue; }
+		if (slug == 'ZWWW') { continue; }
+		if (slug == 'WEBGATE') { continue; }
+
+		if (slug == 'SYNC.CMD') { continue; }
+		if (slug == 'package.json') { continue; }
+
+		/*
 		if (slug.startsWith('hive.')) { continue; }
 		if (slug.startsWith('proxy.') || slug.startsWith('proxyauto.')) { continue; }
 		if (slug.startsWith('redirect.') || slug.startsWith('redirectauto.')) { continue; }
 		if (slug == 'ports.json') { continue; }
+		*/
 		App.LoadSlug(slug);
 	}
 }
