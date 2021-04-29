@@ -3,7 +3,7 @@ ENV NODE_ENV=production
 WORKDIR /app
 COPY ["package.json","package-lock.json*","./"]
 RUN npm remove @cogsmith/xt
-RUN npm ci
+RUN npm install
 RUN apk add docker
 RUN apk add curl
 COPY . .
