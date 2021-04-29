@@ -83,7 +83,7 @@ App.RunInit = function () {
 
 	fastify.get('/zx/db/json', function (req, rep) { rep.send({ CellDB: App.CellDB, PortDB: App.PortDB }); });
 
-	fastify.listen(App.Port, App.IP, (err, address) => { if (err) { LOG.Error(err); throw err; } else { LOG.DEBUG('App.RunInit:Done'); App.RunMain(); } });
+	fastify.listen(App.Port, App.IP, (err, address) => { if (err) { LOG.ERROR(err); throw err; } else { LOG.DEBUG('App.RunInit:Done'); App.RunMain(); } });
 }
 
 App.Nuke = function () {
