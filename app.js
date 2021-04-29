@@ -138,7 +138,7 @@ App.LoadCell = function (cell) {
 	if (z.Type == 'DOCKER-RUN') { RUN.push("docker stop " + dockid + " ; docker rm " + dockid + " ; docker run --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + "/data:/app/data " + z.Run + " --port 9 --ip 0.0.0.0"); }
 
 	//console.log(RUN);
-	RUN.forEach(x => { console.log('CMD: ' + x); execa.commandSync(x, { shell: true }).stdout.pipe(process.stdout); });
+	RUN.forEach(x => { console.log('CMD: ' + x); execa.command(x, { shell: true }).stdout.pipe(process.stdout); });
 
 	let map = {};
 	let kz = Object.keys(App.CellDB);
