@@ -1,5 +1,18 @@
 <code>
 
+# [0.2.7](https://github.com/cogsmith/hive/compare/0.2.7...main) @ [2021-04-30](https://github.com/cogsmith/hive/releases/tag/0.2.7) 
+
+## DIFF
+- [76 COMMITS SINCE LAST TAG = 0.2.6](https://github.com/cogsmith/hive/compare/0.2.6...0.2.7)
+
+## COMMIT
+- Merge branch 'main' of https://github.com/cogsmith/hive
+
+</code>
+
+---
+<code>
+
 # [0.2.6](https://github.com/cogsmith/hive/compare/0.2.6...main) @ [2021-04-27](https://github.com/cogsmith/hive/releases/tag/0.2.6) 
 
 ## DIFF
