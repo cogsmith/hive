@@ -150,8 +150,9 @@ App.LoadCell = function (cell) {
 
 	//console.log(RUN);
 
-	RUN.forEach(x => { LOG.DEBUG('LoadCell.CMD: ' + cell + "\n" + x); let stdout = execa.commandSync(x, { shell: true }).stdout; console.log(stdout); });
 	//RUN.forEach(x => { LOG.DEBUG('LoadCell.CMD: ' + cell + "\n" + x); execa.command(x, { shell: true }).stdout.pipe(process.stdout); });
+	//RUN.forEach(x => { LOG.DEBUG('LoadCell.CMD: ' + cell + "\n" + x); let stdout = execa.commandSync(x, { shell: true }).stdout; console.log(stdout); });
+	RUN.forEach(x => { LOG.DEBUG('LoadCell.CMD: ' + cell + "\n" + x); let stdout = execa.commandSync(x, { shell: true }).stdout; console.log(stdout); execa.command('docker logs -f ' + dockid, { shell: true }).stdout.pipe(process.stdout); });
 
 	let map = {};
 	let kz = Object.keys(App.CellDB);
