@@ -135,18 +135,20 @@ App.LoadCell = function (cell) {
 	LOG.DEBUG('Z.PATH: ' + z.Path);
 	LOG.DEBUG('CELLPATH: ' + cellpath);
 
+	let celltag = path.basename(cellpath).toUpperCase();
+
 	let dockid = 'ZX_' + App.Hive + '_' + z.Port;
 	let dockimg = ''; if (z.Type == 'DOCKER-RUN') { dockimg = z.Run.split(' ')[0]; }
 
-	if (z.Type == 'HTML' && z.Port != 88) { runrun = "docker stop " + dockid + " ; docker wait " + dockid + " ; sleep 1 ; docker rm -f " + dockid + " ; sleep 1 ; docker run -d -t --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/www cogsmith/webhost --port 9 --ip 0.0.0.0 --www /www --base /"; let basepath = cz.join('/').replace(slug + '/web/raw/', ''); if (basepath != '@') { runrun += basepath + '/' }; RUN.push(runrun); }
-	if (z.Type == 'DOCKER-RUN') { RUN.push("docker stop " + dockid + " ; docker wait " + dockid + " ; sleep 1 ; docker rm -f " + dockid + " ; sleep 1 ; docker run -d -t --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + "/data:/app/data " + z.Run + " --port 9 --ip 0.0.0.0"); }
+	if (z.Type == 'HTML' && z.Port != 88) { runrun = "docker stop " + dockid + " ; docker wait " + dockid + " ; sleep 1 ; docker rm -f " + dockid + " ; sleep 1 ; docker run -d -t --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 --env CELLTAG=" + celltag + " -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/www cogsmith/webhost --port 9 --ip 0.0.0.0 --www /www --base /"; let basepath = cz.join('/').replace(slug + '/web/raw/', ''); if (basepath != '@') { runrun += basepath + '/' }; RUN.push(runrun); }
+	if (z.Type == 'DOCKER-RUN') { RUN.push("docker stop " + dockid + " ; docker wait " + dockid + " ; sleep 1 ; docker rm -f " + dockid + " ; sleep 1 ; docker run -d -t --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 --env CELLTAG=" + celltag + " -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + "/data:/app/data " + z.Run + " --port 9 --ip 0.0.0.0"); }
 
 	//if (z.Type == 'APPJS') { RUN.push("docker stop " + dockid + " ; docker rm " + dockid + " ; docker run --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/app node node /app/app.js --port 9 --ip 0.0.0.0"); }
 	//if (z.Type == 'APPJS') { RUN.push("docker stop " + dockid + " ; docker rm " + dockid + " ; docker run --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/app cogsmith/nodemon nodemon /app/app.js --port 9 --ip 0.0.0.0 --loglevel trace"); }
 
 	//if (z.Type == 'APPJS') { if (!fs.existsSync(cellpath + '/package.json')) { RUN.push('echo \'{"dependencies":{"@cogsmith/xt":"*"}}\' > package.json'); } }
 	if (z.Type == 'APPJS') { if (!fs.existsSync(cellpath + '/package.json')) { LOG.INFO('APPJS_NOPACKAGE'); fs.writeFileSync(cellpath + '/package.json', JSON.stringify({ dependencies: { '@cogsmith/xt': '*' } })); } }
-	if (z.Type == 'APPJS') { RUN.push("cd " + cellpath + " ; docker stop " + dockid + " ; docker wait " + dockid + " ; sleep 1 ; docker rm -f " + dockid + " ; npm remove @cogsmith/xt ; npm install @cogsmith/xt ; npm install ; docker run -d -t --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/app cogsmith/nodemon nodemon --delay 2.5 --ignore package.json --ignore package-lock.json /app/app.js --port 9 --ip 0.0.0.0 --loglevel trace"); }
+	if (z.Type == 'APPJS') { RUN.push("cd " + cellpath + " ; docker stop " + dockid + " ; docker wait " + dockid + " ; sleep 1 ; docker rm -f " + dockid + " ; npm remove @cogsmith/xt ; npm install @cogsmith/xt ; npm install ; docker run -d -t --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 --env CELLTAG=" + celltag + " -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/app cogsmith/nodemon nodemon --delay 2.5 --ignore package.json --ignore package-lock.json /app/app.js --port 9 --ip 0.0.0.0 --loglevel trace"); }
 
 	//console.log(RUN);
 
