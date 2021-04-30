@@ -102,7 +102,7 @@ App.Stop = function (cell) {
 }
 
 App.LoadCell = function (cell) {
-	console.log('App.LoadCell: ' + cell);
+	LOG.DEBUG('App.LoadCell: ' + cell);
 
 	let cz = cell.split('/');
 
@@ -142,7 +142,7 @@ App.LoadCell = function (cell) {
 	if (z.Type == 'APPJS') { RUN.push("cd " + z.Path + " ; npm remove @cogsmith/xt ; npm install @cogsmith/xt ; docker stop " + dockid + " ; docker rm " + dockid + " ; docker run --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/app cogsmith/nodemon nodemon /app/app.js --port 9 --ip 0.0.0.0 --loglevel trace"); }
 
 	//console.log(RUN);
-	RUN.forEach(x => { console.log("\n" + 'CMD: ' + x); execa.command(x, { shell: true }).stdout.pipe(process.stdout); });
+	RUN.forEach(x => { LOG.DEBUG("\n" + 'CMD: ' + x); execa.command(x, { shell: true }).stdout.pipe(process.stdout); });
 
 	let map = {};
 	let kz = Object.keys(App.CellDB);
@@ -231,11 +231,11 @@ App.Load = function (cell) {
 
 	let adminips = ''; for (let i = 0; i < App.AdminIP.length; i++) { let ip = App.AdminIP[i]; if (ip) { adminips += '--admin ' + ip + ' ' }; }
 	let cmd = "docker stop ZXPROXY_" + App.Hive + " ; docker rm ZXPROXY_" + App.Hive + " ; docker run -t --restart always --name ZXPROXY_" + App.Hive + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " -p " + App.HiveBind + ":80:80 -p " + App.HiveBind + ":443:443 -v " + App.HivePath + "/" + App.Hive + ":/webgate cogsmith/webgate " + adminips + " --public " + App.HiveIP + " --private " + App.HiveBind + " --to " + App.HiveBind + ' --mapfile BASE.MAP --mapfile HIVE.MAP --mapfile GOTO.MAP --loglevel trace';
-	console.log(cmd);
+	LOG.DEBUG(cmd);
 	execa.command(cmd, { shell: true }).stdout.pipe(process.stdout);
 
 	let cmd88 = "docker stop ZXWEB_" + App.Hive + " ; docker rm ZXWEB_" + App.Hive + " ; docker run -t --restart always --name ZXWEB_" + App.Hive + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " -p " + App.HiveBind + ":88:9 -v " + App.HivePath + "/" + App.Hive + ":/webhost cogsmith/webhost --loglevel trace --port 9 --ip 0.0.0.0 --www /webhost --base / --vhost --xhost";
-	console.log(cmd88);
+	LOG.DEBUG(cmd88);
 	execa.command(cmd88, { shell: true }).stdout.pipe(process.stdout);
 
 	setTimeout(function () {
