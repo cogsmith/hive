@@ -243,7 +243,7 @@ App.Load = function (cell) {
 
 	if (cell == 'ALL') {
 		let cmdnpmi = 'cd /hive ; npm remove @cogsmith/xt ; npm install @cogsmith/xt';
-		console.log(execa.commandSync(cmd, { shell: true }).stdout);
+		console.log(execa.commandSync(cmdnpmi, { shell: true }).stdout);
 
 		let adminips = ''; for (let i = 0; i < App.AdminIP.length; i++) { let ip = App.AdminIP[i]; if (ip) { adminips += '--admin ' + ip + ' ' }; }
 		let cmd = "docker stop ZXPROXY_" + App.Hive + " ; docker rm ZXPROXY_" + App.Hive + " ; docker run -t --restart always --name ZXPROXY_" + App.Hive + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " -p " + App.HiveBind + ":80:80 -p " + App.HiveBind + ":443:443 -v " + App.HivePath + "/" + App.Hive + ":/webgate cogsmith/webgate " + adminips + " --public " + App.HiveIP + " --private " + App.HiveBind + " --to " + App.HiveBind + ' --mapfile BASE.MAP --mapfile HIVE.MAP --mapfile GOTO.MAP --loglevel trace';
