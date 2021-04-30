@@ -1,5 +1,5 @@
 const fs = require('fs');
-const path = require('path');
+const nodepath = require('path');
 
 const _ = require('lodash');
 const yaml = require('js-yaml');
@@ -135,7 +135,7 @@ App.LoadCell = function (cell) {
 	LOG.DEBUG('Z.PATH: ' + z.Path);
 	LOG.DEBUG('CELLPATH: ' + cellpath);
 
-	let celltag = path.basename(cellpath).toUpperCase();
+	let celltag = nodepath.basename(cellpath).toUpperCase();
 
 	let dockid = 'ZX_' + App.Hive + '_' + z.Port;
 	let dockimg = ''; if (z.Type == 'DOCKER-RUN') { dockimg = z.Run.split(' ')[0]; }
