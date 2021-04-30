@@ -211,6 +211,9 @@ App.LoadAll = function () {
 		if (slug == 'ZWWW') { continue; }
 		if (slug == 'WEBGATE') { continue; }
 
+		if (slug == 'node_modules') { continue; }
+		if (slug == 'package-lock.json') { continue; }
+
 		if (slug == 'SYNC.CMD') { continue; }
 		if (slug == 'package.json') { continue; }
 
