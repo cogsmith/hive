@@ -119,7 +119,7 @@ App.LoadCell = function (cell) {
 	let port = 0; if (App.CellDB[cell]) { port = App.CellDB[cell].Port; } else if (type == 'HTML' && cell.substr(-1) == '@') { port = 88; } else { port = App.PortGet(); }
 	let z = { Port: port, Slug: slug, Host: host, Type: type, Base: base, Path: path, Cell: cell };
 
-	if (z.Type == 'DOCKER-RUN') { z.Run = fs.readFileSync('/hive' + '/' + cell + '/' + 'docker.run') + ''; }
+	if (z.Type == 'DOCKER-RUN') { z.Run = fs.readFileSync('/hive' + '/' + cell + '/' + 'docker.run') + ''; z.Run = z.Run.replace(/\n/g, ''); }
 	if (z.Type == 'GOTO-URL') { z.GotoURL = fs.readFileSync('/hive' + '/' + cell + '/' + 'GOTO.URL') + ''; }
 
 	//console.log({Z:z});
@@ -137,6 +137,7 @@ App.LoadCell = function (cell) {
 
 	let dockid = 'ZX_' + App.Hive + '_' + z.Port;
 	let dockimg = ''; if (z.Type == 'DOCKER-RUN') { dockimg = z.Run.split(' ')[0]; }
+
 	if (z.Type == 'HTML' && z.Port != 88) { runrun = "docker stop " + dockid + " ; docker wait " + dockid + " ; sleep 1 ; docker rm -f " + dockid + " ; sleep 1 ; docker run -d -t --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/www cogsmith/webhost --port 9 --ip 0.0.0.0 --www /www --base /"; let basepath = cz.join('/').replace(slug + '/web/raw/', ''); if (basepath != '@') { runrun += basepath + '/' }; RUN.push(runrun); }
 	if (z.Type == 'DOCKER-RUN') { RUN.push("docker stop " + dockid + " ; docker wait " + dockid + " ; sleep 1 ; docker rm -f " + dockid + " ; sleep 1 ; docker run -d -t --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + "/data:/app/data " + z.Run + " --port 9 --ip 0.0.0.0"); }
 
