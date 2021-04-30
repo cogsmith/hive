@@ -155,7 +155,8 @@ App.LoadCell = function (cell) {
 	kz.forEach((k) => {
 		let z = App.CellDB[k];
 		k = k.replace('/web/raw/@', '').replace('/web/raw/_', '/_').replace('/web/raw/', '/').replace('/web/app/@', '').replace('/web/app/_', '/_').replace('/web/app/', '/');
-		let kk = App.GetSlugHost(k.toLowerCase());
+		//let kk = App.GetSlugHost(k.toLowerCase());
+		let kk = App.GetSlugHost(k);
 
 		//console.log('K = ' + k + '  ||  ' + 'KK = ' + kk);
 
