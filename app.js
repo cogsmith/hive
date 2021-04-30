@@ -135,7 +135,7 @@ App.LoadCell = function (cell) {
 
 	let celltag = nodepath.basename(cellpath).toUpperCase();
 	let cellbase = nodepath.basename(cellpath);
-	if (celltag == '@') { celltag = slughost.toUpperCase(); cellbase = '/'; }
+	if (celltag == '@') { celltag = slughost.toUpperCase().replace(/\./g, '_'); cellbase = '/'; }
 
 	let dockid = 'ZX_' + App.Hive + '_' + z.Port;
 	let dockimg = ''; if (z.Type == 'DOCKER-RUN') { dockimg = z.Run.split(' ')[0]; }
