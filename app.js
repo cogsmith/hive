@@ -64,7 +64,10 @@ App.InitData = function () {
 App.RunInit = function () {
 	LOG.DEBUG('App.RunInit');
 
-	try { execa.commandSync('docker container stop $(docker container ls -q --filter name=ZX_' + App.Hive + '_*) ; docker container rm $(docker container ls -q --filter name=ZX_' + App.Hive + '_*)', { shell: true }).stdout.pipe(process.stdout); } catch (ex) { };
+	try {
+		let cmdpurge = 'docker container stop $(docker container ls -a -q --filter name=ZX_' + App.Hive + '_*) ; docker container rm $(docker container ls -a -q --filter name=ZX_' + App.Hive + '_*)' + ' ; ' + 'sleep 1';
+		execa.commandSync(cmdpurge, { shell: true }).stdout.pipe(process.stdout);
+	} catch (ex) { };
 
 	fastify.register(require('fastify-compress'));
 
