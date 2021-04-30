@@ -148,7 +148,7 @@ App.LoadCell = function (cell) {
 	if (z.Type == 'APPJS') { RUN.push("cd " + cellpath + " ; docker stop " + dockid + " ; docker wait " + dockid + " ; docker rm " + dockid + " ; npm install ; docker run -d -t --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/app cogsmith/nodemon nodemon /app/app.js --port 9 --ip 0.0.0.0 --loglevel trace"); }
 
 	//console.log(RUN);
-	RUN.forEach(x => { LOG.DEBUG('LoadCell.CMD: ' + cell + "\n" + x); console.log(execa.commandSync(x, { shell: true }).stdout); });
+	RUN.forEach(x => { LOG.DEBUG('LoadCell.CMD: ' + cell + "\n" + x); let stdout = execa.commandSync(x, { shell: true }).stdout; console.log(stdout); });
 
 	let map = {};
 	let kz = Object.keys(App.CellDB);
@@ -236,14 +236,16 @@ App.Load = function (cell) {
 	fs.mkdirSync('/hive/WWW/.well-known/acme-challenge', { recursive: true });
 	fs.writeFileSync('/hive/WWW/.well-known/acme-challenge/acme.txt', 'ACME');
 
-	let adminips = ''; for (let i = 0; i < App.AdminIP.length; i++) { let ip = App.AdminIP[i]; if (ip) { adminips += '--admin ' + ip + ' ' }; }
-	let cmd = "docker stop ZXPROXY_" + App.Hive + " ; docker rm ZXPROXY_" + App.Hive + " ; docker run -t --restart always --name ZXPROXY_" + App.Hive + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " -p " + App.HiveBind + ":80:80 -p " + App.HiveBind + ":443:443 -v " + App.HivePath + "/" + App.Hive + ":/webgate cogsmith/webgate " + adminips + " --public " + App.HiveIP + " --private " + App.HiveBind + " --to " + App.HiveBind + ' --mapfile BASE.MAP --mapfile HIVE.MAP --mapfile GOTO.MAP --loglevel trace';
-	LOG.DEBUG(cmd);
-	execa.command(cmd, { shell: true }).stdout.pipe(process.stdout);
+	if (cell == 'ALL') {
+		let adminips = ''; for (let i = 0; i < App.AdminIP.length; i++) { let ip = App.AdminIP[i]; if (ip) { adminips += '--admin ' + ip + ' ' }; }
+		let cmd = "docker stop ZXPROXY_" + App.Hive + " ; docker rm ZXPROXY_" + App.Hive + " ; docker run -t --restart always --name ZXPROXY_" + App.Hive + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " -p " + App.HiveBind + ":80:80 -p " + App.HiveBind + ":443:443 -v " + App.HivePath + "/" + App.Hive + ":/webgate cogsmith/webgate " + adminips + " --public " + App.HiveIP + " --private " + App.HiveBind + " --to " + App.HiveBind + ' --mapfile BASE.MAP --mapfile HIVE.MAP --mapfile GOTO.MAP --loglevel trace';
+		LOG.DEBUG(cmd);
+		execa.command(cmd, { shell: true }).stdout.pipe(process.stdout);
 
-	let cmd88 = "docker stop ZXWEB_" + App.Hive + " ; docker rm ZXWEB_" + App.Hive + " ; docker run -t --restart always --name ZXWEB_" + App.Hive + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " -p " + App.HiveBind + ":88:9 -v " + App.HivePath + "/" + App.Hive + ":/webhost cogsmith/webhost --loglevel trace --port 9 --ip 0.0.0.0 --www /webhost --base / --vhost --xhost";
-	LOG.DEBUG(cmd88);
-	execa.command(cmd88, { shell: true }).stdout.pipe(process.stdout);
+		let cmd88 = "docker stop ZXWEB_" + App.Hive + " ; docker rm ZXWEB_" + App.Hive + " ; docker run -t --restart always --name ZXWEB_" + App.Hive + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " -p " + App.HiveBind + ":88:9 -v " + App.HivePath + "/" + App.Hive + ":/webhost cogsmith/webhost --loglevel trace --port 9 --ip 0.0.0.0 --www /webhost --base / --vhost --xhost";
+		LOG.DEBUG(cmd88);
+		execa.command(cmd88, { shell: true }).stdout.pipe(process.stdout);
+	}
 
 	setTimeout(function () {
 		if (cell == 'ALL') { return App.LoadAll(); }
