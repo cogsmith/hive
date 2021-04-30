@@ -146,7 +146,7 @@ App.LoadCell = function (cell) {
 
 	//if (z.Type == 'APPJS') { if (!fs.existsSync(cellpath + '/package.json')) { RUN.push('echo \'{"dependencies":{"@cogsmith/xt":"*"}}\' > package.json'); } }
 	if (z.Type == 'APPJS') { if (!fs.existsSync(cellpath + '/package.json')) { LOG.INFO('APPJS_NOPACKAGE'); fs.writeFileSync(cellpath + '/package.json', JSON.stringify({ dependencies: { '@cogsmith/xt': '*' } })); } }
-	if (z.Type == 'APPJS') { RUN.push("cd " + cellpath + " ; docker stop " + dockid + " ; docker wait " + dockid + " ; sleep 1 ; docker rm -f " + dockid + " ; npm remove @cogsmith/xt ; npm install @cogsmith/xt ; npm install ; docker run -d -t --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/app cogsmith/nodemon nodemon --ignore package.json --ignore package-lock.json /app/app.js --port 9 --ip 0.0.0.0 --loglevel trace"); }
+	if (z.Type == 'APPJS') { RUN.push("cd " + cellpath + " ; docker stop " + dockid + " ; docker wait " + dockid + " ; sleep 1 ; docker rm -f " + dockid + " ; npm remove @cogsmith/xt ; npm install @cogsmith/xt ; npm install ; docker run -d -t --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/app cogsmith/nodemon nodemon --delay 2.5 --ignore package.json --ignore package-lock.json /app/app.js --port 9 --ip 0.0.0.0 --loglevel trace"); }
 
 	//console.log(RUN);
 
