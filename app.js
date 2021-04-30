@@ -141,11 +141,11 @@ App.LoadCell = function (cell) {
 	if (z.Type == 'DOCKER-RUN') { RUN.push("docker stop " + dockid + " ; docker rm " + dockid + " ; docker run --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + "/data:/app/data " + z.Run + " --port 9 --ip 0.0.0.0"); }
 
 	//if (z.Type == 'APPJS') { RUN.push("docker stop " + dockid + " ; docker rm " + dockid + " ; docker run --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/app node node /app/app.js --port 9 --ip 0.0.0.0"); }
-
-	if (z.Type == 'APPJS') { if (!fs.existsSync(cellpath + '/package.json')) { fs.writeFileSync(cellpath + '/package.json', JSON.stringify({ dependencies: { '@cogsmith/xt': '*' } })); } }
-	//if (z.Type == 'APPJS') { if (!fs.existsSync(cellpath + '/package.json')) { RUN.push('echo \'{"dependencies":{"@cogsmith/xt":"*"}}\' > package.json'); } }
-	if (z.Type == 'APPJS') { RUN.push("cd " + cellpath + " ; docker stop " + dockid + " ; docker wait " + dockid + " ; docker rm " + dockid + " ; npm remove @cogsmith/xt ; npm install @cogsmith/xt ; sleep 1 ; docker run --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/app cogsmith/nodemon nodemon /app/app.js --port 9 --ip 0.0.0.0 --loglevel trace"); }
 	//if (z.Type == 'APPJS') { RUN.push("docker stop " + dockid + " ; docker rm " + dockid + " ; docker run --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/app cogsmith/nodemon nodemon /app/app.js --port 9 --ip 0.0.0.0 --loglevel trace"); }
+
+	//if (z.Type == 'APPJS') { if (!fs.existsSync(cellpath + '/package.json')) { RUN.push('echo \'{"dependencies":{"@cogsmith/xt":"*"}}\' > package.json'); } }
+	if (z.Type == 'APPJS') { if (!fs.existsSync(cellpath + '/package.json')) { fs.writeFileSync(cellpath + '/package.json', JSON.stringify({ dependencies: { '@cogsmith/xt': '*' } })); } }
+	if (z.Type == 'APPJS') { RUN.push("cd " + cellpath + " ; docker stop " + dockid + " ; docker wait " + dockid + " ; docker rm " + dockid + " ; npm remove @cogsmith/xt ; npm install @cogsmith/xt ; sleep 1 ; docker run --restart always --name " + dockid + ' --env HIVESLUG=' + slug + ' --env SLUGHOST=' + slughost.toLowerCase() + " --env HOST=0.0.0.0 --env PORT=9 -p " + App.HiveBind + ":" + z.Port + ":9 -v " + z.Path + ":/app cogsmith/nodemon nodemon /app/app.js --port 9 --ip 0.0.0.0 --loglevel trace"); }
 
 	//console.log(RUN);
 	RUN.forEach(x => { LOG.DEBUG("\n" + 'CMD: ' + x); execa.commandSync(x, { shell: true }).stdout.pipe(process.stdout); });
