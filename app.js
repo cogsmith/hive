@@ -12,8 +12,7 @@ const axios = require('axios').default;
 
 //const XT = require('/DEV/CODE/xtdev/node_modules/@cogsmith/xt').Init();
 const XT = require('@cogsmith/xt').Init();
-const LOG = XT.Log;
-const App = XT.App;
+const App = XT.App; const LOG = XT.LOG;
 
 //
 
