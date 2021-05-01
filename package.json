@@ -19,7 +19,7 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "@cogsmith/xt": "^1.0.38",
+    "@cogsmith/xt": "^1.0.63",
     "axios": "^0.21.1",
     "execa": "^5.0.0",
     "fastify": "^3.12.0",
