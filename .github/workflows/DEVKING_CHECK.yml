@@ -11,4 +11,4 @@ jobs:
     - run: npm -v
     - run: npm ci
       continue-on-error: true
-    - run: node --check ./app.js
+    - run: find . -maxdepth 1 -name *.js -exec node --check {} \;
